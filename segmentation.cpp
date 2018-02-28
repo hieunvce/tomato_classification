@@ -3,13 +3,9 @@
 //
 #include "segmentation.h"
 
-void segmentation(Mat srcImage, Mat segImage)
+Mat segmentation(Mat srcImage)
 {
-    //============================================================
-    //namedWindow("Source Image",CV_WINDOW_AUTOSIZE);
-    //imshow("Source Image",srcImage);
-    //============================================================
-
+    Mat segImage(srcImage.rows,srcImage.cols,CV_8UC3);
     // Segmentation
     assert(srcImage.channels() == 3);
     Mat medianImage(srcImage.rows,srcImage.cols,CV_8UC3);
@@ -39,6 +35,6 @@ void segmentation(Mat srcImage, Mat segImage)
     }
     morphologyEx(segImage,segImage,MORPH_CLOSE,kernel,Point(1,1),2);
     morphologyEx(segImage,segImage,MORPH_OPEN,kernel);
-    cout << "Count: " << count << endl;
+    return segImage;
 }
 
