@@ -10,8 +10,6 @@ RotatedRect detection(Mat srcImage, Mat segImage)
     cvtColor(segImage,segImage,CV_BGR2GRAY);
     Canny(segImage, segImage, 50, 150, 3);
     segImage.convertTo(draw,CV_8U);
-    //namedWindow("image", CV_WINDOW_AUTOSIZE);
-    //imshow("image", draw);
     vector<vector<Point> > contours;
     vector<Vec4i> hierarchy;
     RNG rng(12345);
@@ -20,11 +18,17 @@ RotatedRect detection(Mat srcImage, Mat segImage)
     RotatedRect tomatoBox;
     Mat detectedImage = srcImage.clone();
     cout << "Contour size: " << contours.size() << endl;
-    for( int i = 0; i< contours.size(); i++ )
-    {
+    vector<Point> lagestContour;
+    float maxContourArea=contourArea(contours[0]);
+    for (int i=0;i<contours.size();i++) {
+        if (contourArea(contours[i]) > maxContourArea) {
+            maxContourArea = contourArea(contours[i]);
+            lagestContour = contours[i];
+        }
+    }
+
         Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-        //drawContours( detectedImage, contours, i, color, 2, 8, hierarchy, 0, Point() );
-        tomatoBox = fitEllipse(contours[i]);
+        tomatoBox = fitEllipse(lagestContour);
         Point2f vertices2f[4];
         tomatoBox.points(vertices2f);
         Point vertices[4];
@@ -35,8 +39,7 @@ RotatedRect detection(Mat srcImage, Mat segImage)
         axes.height = tomatoBox.size.height/2;
         axes.width = tomatoBox.size.width/2;
         ellipse(detectedImage,tomatoBox.center,axes,tomatoBox.angle,0.0,360.0,color,2,8,0);
-
-    }
+        cout << "Max Contour Area: " << maxContourArea << endl;
     namedWindow("Result window",CV_WINDOW_AUTOSIZE);
     imshow( "Result window", detectedImage);
     return tomatoBox;
