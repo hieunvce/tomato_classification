@@ -21,12 +21,14 @@ RotatedRect detection(Mat srcImage, Mat segImage)
     vector<Point> lagestContour;
     float maxContourArea=contourArea(contours[0]);
     for (int i=0;i<contours.size();i++) {
-        if (contourArea(contours[i]) > maxContourArea) {
-            maxContourArea = contourArea(contours[i]);
+        float area = contourArea(contours[i]);
+        cout << "Contour " << i << " area: " << area << endl;
+        if (area > maxContourArea) {
+            maxContourArea = area;
             lagestContour = contours[i];
         }
     }
-
+    cout << "Max Contour Area: " << maxContourArea << endl;
         Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
         tomatoBox = fitEllipse(lagestContour);
         Point2f vertices2f[4];
@@ -39,7 +41,6 @@ RotatedRect detection(Mat srcImage, Mat segImage)
         axes.height = tomatoBox.size.height/2;
         axes.width = tomatoBox.size.width/2;
         ellipse(detectedImage,tomatoBox.center,axes,tomatoBox.angle,0.0,360.0,color,2,8,0);
-        cout << "Max Contour Area: " << maxContourArea << endl;
     namedWindow("Result window",CV_WINDOW_AUTOSIZE);
     imshow( "Result window", detectedImage);
     return tomatoBox;
