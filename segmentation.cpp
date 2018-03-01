@@ -18,20 +18,13 @@ Mat segmentation(Mat srcImage)
 
         for (int j = 0; j < LabImage.cols; ++j) {
 
-            unsigned int l = *lab_data++;
+            int l = *lab_data++;
             l=l*100/255;
-            unsigned int a = *lab_data++;
-            if (a>=128)
-                a-=128;
-            else
-                a=0;
-            unsigned int b = *lab_data++;
-            if (b>=128)
-                b-=128;
-            else
-                b=0;
-            cout << "Lab = " << l << " " << a << " " << b << endl;
-            if ((a>=20) && (a<=75) && (b>=20) && (b<=65) && abs(a-b)>=0 && abs(a-b)<=21) {
+            int a = *lab_data++;
+            a-=128;
+            int b = *lab_data++;
+            b-=128;
+            if ((a>=-5) && (a<=75) && (b>=20) && (b<=65) && abs(a-b)>=0 && abs(a-b)<=21) {
                 *seg_data++ = 255;
                 *seg_data++ = 255;
                 *seg_data++ = 255;
