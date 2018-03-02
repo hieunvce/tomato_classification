@@ -6,44 +6,56 @@
 
 RotatedRect detection(Mat srcImage, Mat segImage)
 {
-    Mat draw;
+    // Find edge using Canny algorithm
+    Mat edgeImage,kernel;
     cvtColor(segImage,segImage,CV_BGR2GRAY);
-    Canny(segImage, segImage, 50, 150, 3);
-    segImage.convertTo(draw,CV_8U);
+    Canny(segImage, segImage, 0, 255, 3);
+    morphologyEx(segImage,segImage,MORPH_CLOSE,kernel);
+    segImage.convertTo(edgeImage,CV_8U);
+
+    //Find contour base on edge
     vector<vector<Point> > contours;
     vector<Vec4i> hierarchy;
-    RNG rng(12345);
-    findContours( draw, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
-    /// Draw contours
-    RotatedRect tomatoBox;
-    Mat detectedImage = srcImage.clone();
-    cout << "Contour size: " << contours.size() << endl;
-    vector<Point> lagestContour;
-    float maxContourArea=contourArea(contours[0]);
-    for (int i=0;i<contours.size();i++) {
-        float area = contourArea(contours[i]);
-        cout << "Contour " << i << " area: " << area << endl;
+    findContours(edgeImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+
+    //Convexthull contour
+    vector<vector<Point> >hull(contours.size());
+    for (size_t i=0;i<contours.size();i++)
+    {
+        convexHull(contours[i],hull[i],false);
+    }
+
+    // Find largest Contour => is Tomato
+    vector<Point> largestContour;
+    float maxContourArea=contourArea(hull[0]);
+    largestContour=hull[0];
+    for (int i=0;i<hull.size();i++) {
+        float area = contourArea(hull[i]);
         if (area > maxContourArea) {
             maxContourArea = area;
-            lagestContour = contours[i];
+            largestContour = hull[i];
         }
     }
-    cout << "Max Contour Area: " << maxContourArea << endl;
-        Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-        tomatoBox = fitEllipse(lagestContour);
-        Point2f vertices2f[4];
-        tomatoBox.points(vertices2f);
-        Point vertices[4];
-        for (int i=0;i<4;++i) {
-            vertices[i] = vertices2f[i];
-        }
-        Size axes;
-        axes.height = tomatoBox.size.height/2;
-        axes.width = tomatoBox.size.width/2;
-        ellipse(detectedImage,tomatoBox.center,axes,tomatoBox.angle,0.0,360.0,color,2,8,0);
+
+    //Fit an ellipse to detected contour
+    RotatedRect tomatoBox;
+    tomatoBox = fitEllipse(largestContour);
+    Point2f vertices2f[4];
+    tomatoBox.points(vertices2f);
+    Point vertices[4];
+    for (int i=0;i<4;++i) {
+        vertices[i] = vertices2f[i];
+    }
+    Size axes;
+    axes.height = tomatoBox.size.height/2;
+    axes.width = tomatoBox.size.width/2;
+
+    //Draw ellipse to srcImage
+    Scalar color = Scalar(255,255,255);
+    cout << "Tomato size: Height: " << axes.height << " | Width: " << axes.width << endl;
+    ellipse(srcImage,tomatoBox.center,axes,tomatoBox.angle,0.0,360.0,color,2,8,0);
     namedWindow("Result window",CV_WINDOW_AUTOSIZE);
-    imshow( "Result window", detectedImage);
+    imshow( "Result window", srcImage);
+
     return tomatoBox;
 }
-
-
