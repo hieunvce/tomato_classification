@@ -14,6 +14,7 @@ Mat createMaskImage(Mat srcImage, RotatedRect boundingBox)
 
 void calculateEachColorPercentage(Mat srcImage, Mat maskImage)
 {
+
     Mat LabImage(srcImage.rows,srcImage.cols,CV_8UC3);
     cvtColor(srcImage,LabImage,COLOR_BGR2Lab);
 
@@ -34,7 +35,10 @@ void calculateEachColorPercentage(Mat srcImage, Mat maskImage)
                 b -= 128;
                 if ((a >= -5) && (a <= 75) && (b >= 20) && (b <= 65) && abs(a - b) >= 0 && abs(a - b) <= 21) {
                     rCount++;
+                    maskImage.at<unsigned char>(i,j)=0;
                 }
+            } else{
+                lab_data+=3;
             }
         }
     }
