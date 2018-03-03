@@ -94,6 +94,12 @@
 		<Unit filename="/home/henry/CLionProjects/TomatoClassification/classifyByColor.h">
 			<Option target="TomatoClassification"/>
 		</Unit>
+		<Unit filename="/home/henry/CLionProjects/TomatoClassification/colorProfile.cpp">
+			<Option target="TomatoClassification"/>
+		</Unit>
+		<Unit filename="/home/henry/CLionProjects/TomatoClassification/colorProfile.h">
+			<Option target="TomatoClassification"/>
+		</Unit>
 		<Unit filename="/home/henry/CLionProjects/TomatoClassification/detection.cpp">
 			<Option target="TomatoClassification"/>
 		</Unit>

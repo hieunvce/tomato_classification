@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -9,8 +9,20 @@
 /home/henry/CLionProjects/TomatoClassification/classifyByColor.cpp
 classifyByColor.h
 /home/henry/CLionProjects/TomatoClassification/classifyByColor.h
+colorProfile.h
+/home/henry/CLionProjects/TomatoClassification/colorProfile.h
 
 /home/henry/CLionProjects/TomatoClassification/classifyByColor.h
+opencv2/opencv.hpp
+-
+iostream
+-
+
+/home/henry/CLionProjects/TomatoClassification/colorProfile.cpp
+colorProfile.h
+/home/henry/CLionProjects/TomatoClassification/colorProfile.h
+
+/home/henry/CLionProjects/TomatoClassification/colorProfile.h
 opencv2/opencv.hpp
 -
 iostream
@@ -41,6 +53,8 @@ classifyByColor.h
 /home/henry/CLionProjects/TomatoClassification/segmentation.cpp
 segmentation.h
 /home/henry/CLionProjects/TomatoClassification/segmentation.h
+colorProfile.h
+/home/henry/CLionProjects/TomatoClassification/colorProfile.h
 
 /home/henry/CLionProjects/TomatoClassification/segmentation.h
 opencv2/opencv.hpp

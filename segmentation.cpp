@@ -2,6 +2,7 @@
 // Created by henry on 2/24/18.
 //
 #include "segmentation.h"
+#include "colorProfile.h"
 
 Mat segmentation(Mat srcImage)
 {
@@ -18,13 +19,12 @@ Mat segmentation(Mat srcImage)
 
         for (int j = 0; j < LabImage.cols; ++j) {
 
-            int l = *lab_data++;
-            l=l*100/255;
+            lab_data++;
             int a = *lab_data++;
             a-=128;
             int b = *lab_data++;
             b-=128;
-            if ((a>=-5) && (a<=75) && (b>=20) && (b<=65) && abs(a-b)>=0 && abs(a-b)<=21) {
+            if (isGreen(a,b)) {
                 *seg_data++ = 255;
                 *seg_data++ = 255;
                 *seg_data++ = 255;

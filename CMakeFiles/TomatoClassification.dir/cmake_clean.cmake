@@ -3,6 +3,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/TomatoClassification.dir/segmentation.cpp.o"
   "CMakeFiles/TomatoClassification.dir/detection.cpp.o"
   "CMakeFiles/TomatoClassification.dir/classifyByColor.cpp.o"
+  "CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o"
   "TomatoClassification.pdb"
   "TomatoClassification"
 )
