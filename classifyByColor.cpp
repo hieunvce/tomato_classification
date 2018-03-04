@@ -21,7 +21,8 @@ void calculateEachColorPercentage(Mat srcImage, Mat maskImage)
 
     assert(LabImage.channels() == 3);
     unsigned int count=0;
-    unsigned int rCount=0;
+    unsigned int rCount,yCount,gCount,oCount;
+    rCount=yCount=gCount=oCount=0;
 
     for (int i=0;i<LabImage.rows;++i) {
         const uchar *lab_data = LabImage.ptr<uchar>(i);
@@ -33,9 +34,17 @@ void calculateEachColorPercentage(Mat srcImage, Mat maskImage)
                 a -= 128;
                 int b = *lab_data++;
                 b -= 128;
-                if (isYellow(a,b)) {
+                if (isRed(a,b)) {
                     rCount++;
                     maskImage.at<unsigned char>(i,j)=0;
+                } else if (isYellow(a,b)){
+                    yCount++;
+                    maskImage.at<unsigned char>(i,j)=0;
+                } else if (isGreen(a,b)){
+                    gCount++;
+                    maskImage.at<unsigned char>(i,j)=0;
+                } else{
+                    oCount++;
                 }
             } else{
                 lab_data+=3;
@@ -43,7 +52,16 @@ void calculateEachColorPercentage(Mat srcImage, Mat maskImage)
         }
     }
 
-    float percentage = (float)rCount/count;
-    percentage*=100;
-    cout << "Red Pixel Percentage: " << percentage << "%" << endl;
+    float redPercentage = (float)rCount/count;
+    redPercentage*=100;
+    float yellowPercentage = (float)yCount/count;
+    yellowPercentage*=100;
+    float greenPercentage = (float)gCount/count;
+    greenPercentage*=100;
+    float otherPercentage = (float)oCount/count;
+    otherPercentage*=100;
+    cout << "Red Pixel Percentage: " << redPercentage << "%" << endl;
+    cout << "Yellow Pixel Percentage: " << yellowPercentage << "%" << endl;
+    cout << "Green Pixel Percentage: " << greenPercentage << "%" << endl;
+    cout << "Other color Pixel Percentage: " << otherPercentage << "%" << endl;
 }

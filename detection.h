@@ -11,6 +11,6 @@ using namespace cv;
 #ifndef TOMATOCLASSIFICATION_DETECTION_H
 #define TOMATOCLASSIFICATION_DETECTION_H
 
-RotatedRect detection(Mat srcImage, Mat segImage);
+RotatedRect detection(Mat srcImage, Mat segImage,float &maxContourAreaReturn);
 
 #endif //TOMATOCLASSIFICATION_DETECTION_H

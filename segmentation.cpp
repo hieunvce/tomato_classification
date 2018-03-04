@@ -4,7 +4,7 @@
 #include "segmentation.h"
 #include "colorProfile.h"
 
-Mat segmentation(Mat srcImage)
+Mat segmentation(Mat srcImage,int color)
 {
 
     Mat LabImage(srcImage.rows,srcImage.cols,CV_8UC3);
@@ -24,14 +24,39 @@ Mat segmentation(Mat srcImage)
             a-=128;
             int b = *lab_data++;
             b-=128;
-            if (isYellow(a,b)) {
-                *seg_data++ = 255;
-                *seg_data++ = 255;
-                *seg_data++ = 255;
+            if (color == 1){
+                if (isRed(a,b)) {
+                    *seg_data++ = 255;
+                    *seg_data++ = 255;
+                    *seg_data++ = 255;
+                } else {
+                    *seg_data++ = 0;
+                    *seg_data++ = 0;
+                    *seg_data++ = 0;
+                }
+            } else if (color == 2){
+                if (isYellow(a,b)) {
+                    *seg_data++ = 255;
+                    *seg_data++ = 255;
+                    *seg_data++ = 255;
+                } else {
+                    *seg_data++ = 0;
+                    *seg_data++ = 0;
+                    *seg_data++ = 0;
+                }
+            } else if (color == 3){
+                if (isGreen(a,b)) {
+                    *seg_data++ = 255;
+                    *seg_data++ = 255;
+                    *seg_data++ = 255;
+                } else {
+                    *seg_data++ = 0;
+                    *seg_data++ = 0;
+                    *seg_data++ = 0;
+                }
             } else {
-                *seg_data++ = 0;
-                *seg_data++ = 0;
-                *seg_data++ = 0;
+                cout << "Wrong color code: 1. Red, 2. Yellow, 3. Green." << endl;
+                exit(-2);
             }
         }
     }
@@ -41,6 +66,7 @@ Mat segmentation(Mat srcImage)
     morphologyEx(segImage,segImage,MORPH_CLOSE,kernel);
     morphologyEx(segImage,segImage,MORPH_OPEN,kernel);
     morphologyEx(segImage,segImage,MORPH_CLOSE,kernel);
+    cout << "Segmented color code " << color << "." << endl;
 
     return segImage;
 }

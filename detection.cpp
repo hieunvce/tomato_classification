@@ -4,8 +4,9 @@
 
 #include "detection.h"
 
-RotatedRect detection(Mat srcImage, Mat segImage)
+RotatedRect detection(Mat srcImage, Mat segImage, float &maxContourAreaReturn)
 {
+
     // Find edge using Canny algorithm
     Mat edgeImage,kernel;
     cvtColor(segImage,segImage,CV_BGR2GRAY);
@@ -17,6 +18,13 @@ RotatedRect detection(Mat srcImage, Mat segImage)
     vector<vector<Point> > contours;
     vector<Vec4i> hierarchy;
     findContours(edgeImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+
+    //Check if contour existtence
+    if (contours.size()==0)
+    {
+        RotatedRect tomatoBox(Point2f(2,2),Size2f(1,1),0);
+        return tomatoBox;
+    }
 
     //Convexthull contour
     vector<vector<Point> >hull(contours.size());
@@ -54,8 +62,8 @@ RotatedRect detection(Mat srcImage, Mat segImage)
     Scalar color = Scalar(255,255,255);
     cout << "Tomato size: Height: " << axes.height << " | Width: " << axes.width << endl;
     ellipse(srcImage,tomatoBox.center,axes,tomatoBox.angle,0.0,360.0,color,2,8,0);
-    namedWindow("Result window",CV_WINDOW_AUTOSIZE);
-    imshow( "Result window", srcImage);
 
+    cout << "Detection Done!" << endl;
+    maxContourAreaReturn = maxContourArea;
     return tomatoBox;
 }

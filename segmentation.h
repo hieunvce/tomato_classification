@@ -10,6 +10,6 @@ using namespace cv;
 #ifndef TOMATOCLASSIFICATION_SEGMENTATION_H
 #define TOMATOCLASSIFICATION_SEGMENTATION_H
 
-Mat segmentation(Mat srcImage);
+Mat segmentation(Mat srcImage, int color);
 
 #endif //TOMATOCLASSIFICATION_SEGMENTATION_H
