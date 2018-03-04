@@ -66,7 +66,6 @@ Mat segmentation(Mat srcImage,int color)
     morphologyEx(segImage,segImage,MORPH_CLOSE,kernel);
     morphologyEx(segImage,segImage,MORPH_OPEN,kernel);
     morphologyEx(segImage,segImage,MORPH_CLOSE,kernel);
-    cout << "Segmented color code " << color << "." << endl;
 
     return segImage;
 }

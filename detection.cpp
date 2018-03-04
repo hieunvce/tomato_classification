@@ -48,22 +48,7 @@ RotatedRect detection(Mat srcImage, Mat segImage, float &maxContourAreaReturn)
     //Fit an ellipse to detected contour
     RotatedRect tomatoBox;
     tomatoBox = fitEllipse(largestContour);
-    Point2f vertices2f[4];
-    tomatoBox.points(vertices2f);
-    Point vertices[4];
-    for (int i=0;i<4;++i) {
-        vertices[i] = vertices2f[i];
-    }
-    Size axes;
-    axes.height = tomatoBox.size.height/2;
-    axes.width = tomatoBox.size.width/2;
 
-    //Draw ellipse to srcImage
-    Scalar color = Scalar(255,255,255);
-    cout << "Tomato size: Height: " << axes.height << " | Width: " << axes.width << endl;
-    ellipse(srcImage,tomatoBox.center,axes,tomatoBox.angle,0.0,360.0,color,2,8,0);
-
-    cout << "Detection Done!" << endl;
     maxContourAreaReturn = maxContourArea;
     return tomatoBox;
 }
