@@ -24,12 +24,21 @@ int main(int argc, char** argv) {
     RotatedRect yellowBoundingBox = detection(srcImage,yellowSegImage,yellowArea);
     RotatedRect greenBoundingBox = detection(srcImage,greenSegImage,greenArea);
     RotatedRect boundingBox;
-    if (redArea>=yellowArea && redArea>=greenArea)
+    if (redArea>=yellowArea && redArea>=greenArea) {
         boundingBox = redBoundingBox;
-    else if (yellowArea>=redArea && yellowArea>=greenArea)
+        cout << endl;
+        cout << "---------------RED TOMATO------------------" << endl;
+    }
+    else if (yellowArea>=redArea && yellowArea>=greenArea) {
         boundingBox = yellowBoundingBox;
-    else
+        cout << endl;
+        cout << "---------------YELLOW TOMATO---------------" << endl;
+    }
+    else {
         boundingBox = greenBoundingBox;
+        cout << endl;
+        cout << "---------------GREEN TOMATO----------------" << endl;
+    }
 
     //Calculate ellipse from rotated rectangle and draw to srcImage
     Size axes;
@@ -37,7 +46,7 @@ int main(int argc, char** argv) {
     axes.width = boundingBox.size.width/2;
 
     Scalar color = Scalar(0,0,0);
-    cout << "Tomato size: Height: " << axes.height << " | Width: " << axes.width << endl;
+    cout << endl << "Tomato size: Height: " << axes.height << " | Width: " << axes.width << endl;
     ellipse(srcImage,boundingBox.center,axes,boundingBox.angle,0.0,360.0,color,2,8,0);
 
     Mat mask = createMaskImage(srcImage,boundingBox);

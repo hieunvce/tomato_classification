@@ -60,6 +60,7 @@ void calculateEachColorPercentage(Mat srcImage, Mat maskImage)
     greenPercentage*=100;
     float otherPercentage = (float)oCount/count;
     otherPercentage*=100;
+    cout << endl;
     cout << "Red Pixel Percentage: " << redPercentage << "%" << endl;
     cout << "Yellow Pixel Percentage: " << yellowPercentage << "%" << endl;
     cout << "Green Pixel Percentage: " << greenPercentage << "%" << endl;
