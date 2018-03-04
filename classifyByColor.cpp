@@ -33,7 +33,7 @@ void calculateEachColorPercentage(Mat srcImage, Mat maskImage)
                 a -= 128;
                 int b = *lab_data++;
                 b -= 128;
-                if (isGreen(a,b)) {
+                if (isYellow(a,b)) {
                     rCount++;
                     maskImage.at<unsigned char>(i,j)=0;
                 }

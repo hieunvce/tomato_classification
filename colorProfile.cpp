@@ -17,7 +17,7 @@ bool isGreen(int a, int b)
 }
 bool isYellow(int a, int b)
 {
-    if ((a>=-5) && (a<=75) && (b>=20) && (b<=65) && abs(a-b)>=0 && abs(a-b)<=21)
+    if ((a>=-10) && (a<=40) && (b>=50) && (b<=90) && abs(a-b)>=25 && abs(a-b)<=75)
         return true;
     return false;
 }

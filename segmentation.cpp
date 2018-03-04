@@ -24,7 +24,7 @@ Mat segmentation(Mat srcImage)
             a-=128;
             int b = *lab_data++;
             b-=128;
-            if (isGreen(a,b)) {
+            if (isYellow(a,b)) {
                 *seg_data++ = 255;
                 *seg_data++ = 255;
                 *seg_data++ = 255;
