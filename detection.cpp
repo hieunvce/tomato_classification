@@ -44,6 +44,10 @@ RotatedRect detection(Mat srcImage, Mat segImage, float &maxContourAreaReturn)
             largestContour = hull[i];
         }
     }
+    //Mat contourImage=srcImage.clone();
+    //drawContours(contourImage,largestContour,(0,0,0),2,8);
+    namedWindow("Edge Image",WINDOW_AUTOSIZE);
+    imshow("Edge Image",contourImage);
 
     //Fit an ellipse to detected contour
     RotatedRect tomatoBox;

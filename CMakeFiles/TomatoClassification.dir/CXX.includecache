@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,57 +6,57 @@
 
 #IncludeRegexTransform: 
 
-/home/henry/CLionProjects/TomatoClassification/classifyByColor.cpp
+/home/hieunguyen/Projects/tomato_classification/classifyByColor.cpp
 classifyByColor.h
-/home/henry/CLionProjects/TomatoClassification/classifyByColor.h
+/home/hieunguyen/Projects/tomato_classification/classifyByColor.h
 colorProfile.h
-/home/henry/CLionProjects/TomatoClassification/colorProfile.h
+/home/hieunguyen/Projects/tomato_classification/colorProfile.h
 
-/home/henry/CLionProjects/TomatoClassification/classifyByColor.h
+/home/hieunguyen/Projects/tomato_classification/classifyByColor.h
 opencv2/opencv.hpp
 -
 iostream
 -
 
-/home/henry/CLionProjects/TomatoClassification/colorProfile.cpp
+/home/hieunguyen/Projects/tomato_classification/colorProfile.cpp
 colorProfile.h
-/home/henry/CLionProjects/TomatoClassification/colorProfile.h
+/home/hieunguyen/Projects/tomato_classification/colorProfile.h
 
-/home/henry/CLionProjects/TomatoClassification/colorProfile.h
+/home/hieunguyen/Projects/tomato_classification/colorProfile.h
 opencv2/opencv.hpp
 -
 iostream
 -
 
-/home/henry/CLionProjects/TomatoClassification/detection.cpp
+/home/hieunguyen/Projects/tomato_classification/detection.cpp
 detection.h
-/home/henry/CLionProjects/TomatoClassification/detection.h
+/home/hieunguyen/Projects/tomato_classification/detection.h
 
-/home/henry/CLionProjects/TomatoClassification/detection.h
+/home/hieunguyen/Projects/tomato_classification/detection.h
 opencv2/opencv.hpp
 -
 iostream
 -
 
-/home/henry/CLionProjects/TomatoClassification/main.cpp
+/home/hieunguyen/Projects/tomato_classification/main.cpp
 iostream
 -
 opencv2/opencv.hpp
 -
 segmentation.h
-/home/henry/CLionProjects/TomatoClassification/segmentation.h
+/home/hieunguyen/Projects/tomato_classification/segmentation.h
 detection.h
-/home/henry/CLionProjects/TomatoClassification/detection.h
+/home/hieunguyen/Projects/tomato_classification/detection.h
 classifyByColor.h
-/home/henry/CLionProjects/TomatoClassification/classifyByColor.h
+/home/hieunguyen/Projects/tomato_classification/classifyByColor.h
 
-/home/henry/CLionProjects/TomatoClassification/segmentation.cpp
+/home/hieunguyen/Projects/tomato_classification/segmentation.cpp
 segmentation.h
-/home/henry/CLionProjects/TomatoClassification/segmentation.h
+/home/hieunguyen/Projects/tomato_classification/segmentation.h
 colorProfile.h
-/home/henry/CLionProjects/TomatoClassification/colorProfile.h
+/home/hieunguyen/Projects/tomato_classification/colorProfile.h
 
-/home/henry/CLionProjects/TomatoClassification/segmentation.h
+/home/hieunguyen/Projects/tomato_classification/segmentation.h
 opencv2/opencv.hpp
 -
 iostream

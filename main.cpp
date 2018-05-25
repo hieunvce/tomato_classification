@@ -16,6 +16,8 @@ int main(int argc, char** argv) {
     Mat greenSegImage(srcImage.rows,srcImage.cols,CV_8UC3);
 
     redSegImage = segmentation(srcImage,1);
+    namedWindow("red segment image",WINDOW_AUTOSIZE);
+    imshow("red segment image",redSegImage);
     yellowSegImage = segmentation(srcImage,2);
     greenSegImage = segmentation(srcImage,3);
     float redArea,yellowArea,greenArea;
