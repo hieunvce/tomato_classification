@@ -7,6 +7,6 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(OpenCV REQUIRED)
 
-add_executable(${PROJECT_NAME} main.cpp segmentation.h segmentation.cpp detection.h detection.cpp classifyByColor.h classifyByColor.cpp colorProfile.h colorProfile.cpp)
+add_executable(${PROJECT_NAME} main.cpp classifyByColor.h colorProfile.h colorProfile.cpp function.h function.cpp)
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})

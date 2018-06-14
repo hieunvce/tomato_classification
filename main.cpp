@@ -1,8 +1,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include "segmentation.h"
-#include "detection.h"
-#include "classifyByColor.h"
+#include "colorProfile.h"
+#include "function.h"
 
 using namespace std;
 using namespace cv;
@@ -10,38 +9,28 @@ using namespace cv;
 
 int main(int argc, char** argv) {
 
-    Mat srcImage = imread(argv[1],CV_LOAD_IMAGE_COLOR);
-    Mat redSegImage(srcImage.rows,srcImage.cols,CV_8UC3);
-    Mat yellowSegImage(srcImage.rows,srcImage.cols,CV_8UC3);
-    Mat greenSegImage(srcImage.rows,srcImage.cols,CV_8UC3);
+    //Mat srcImage = imread(argv[1],CV_LOAD_IMAGE_COLOR);
+    Mat srcImage = imread("./test_image/Bad/l3.jpg",CV_LOAD_IMAGE_COLOR);
+    Mat LabImage(srcImage.rows,srcImage.cols,CV_8UC3);
+    cvtColor(srcImage,LabImage,COLOR_BGR2Lab);
+                ///for debug
+                namedWindow("lab image",WINDOW_AUTOSIZE);
+                imshow("lab image",LabImage);
+                cout << "LabImage: rows= " << LabImage.rows << "\t columns= " << LabImage.cols <<endl;
+                //end debug
+    Mat segImage(srcImage.rows,srcImage.cols,CV_8UC3);
 
-    redSegImage = segmentation(srcImage,1);
-    namedWindow("red segment image",WINDOW_AUTOSIZE);
-    imshow("red segment image",redSegImage);
-    yellowSegImage = segmentation(srcImage,2);
-    greenSegImage = segmentation(srcImage,3);
-    float redArea,yellowArea,greenArea;
-    redArea=yellowArea=greenArea=0;
-    RotatedRect redBoundingBox = detection(srcImage,redSegImage,redArea);
-    RotatedRect yellowBoundingBox = detection(srcImage,yellowSegImage,yellowArea);
-    RotatedRect greenBoundingBox = detection(srcImage,greenSegImage,greenArea);
+    Color colorID=findColor(LabImage);
+    segImage = segmentImage(srcImage,colorID);
+
+                ///for debug
+                namedWindow("red segment image",WINDOW_AUTOSIZE);
+                imshow("red segment image",segImage);
+                cout << "segImage: rows= " << segImage.rows << "\t columns= " << segImage.cols <<endl;
+                //end debug
+
     RotatedRect boundingBox;
-    if (redArea>=yellowArea && redArea>=greenArea) {
-        boundingBox = redBoundingBox;
-        cout << endl;
-        cout << "---------------RED TOMATO------------------" << endl;
-    }
-    else if (yellowArea>=redArea && yellowArea>=greenArea) {
-        boundingBox = yellowBoundingBox;
-        cout << endl;
-        cout << "---------------YELLOW TOMATO---------------" << endl;
-    }
-    else {
-        boundingBox = greenBoundingBox;
-        cout << endl;
-        cout << "---------------GREEN TOMATO----------------" << endl;
-    }
-
+    boundingBox=detectROI(segImage);
     //Calculate ellipse from rotated rectangle and draw to srcImage
     Size axes;
     axes.height = boundingBox.size.height/2;
@@ -50,9 +39,6 @@ int main(int argc, char** argv) {
     Scalar color = Scalar(0,0,0);
     cout << endl << "Tomato size: Height: " << axes.height << " | Width: " << axes.width << endl;
     ellipse(srcImage,boundingBox.center,axes,boundingBox.angle,0.0,360.0,color,2,8,0);
-
-    Mat mask = createMaskImage(srcImage,boundingBox);
-    calculateEachColorPercentage(srcImage, mask);
 
     namedWindow("Detected Image",WINDOW_AUTOSIZE);
     imshow("Detected Image",srcImage);

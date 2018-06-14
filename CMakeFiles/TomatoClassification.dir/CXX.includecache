@@ -1,22 +1,10 @@
-#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
 #IncludeRegexComplain: ^$
 
 #IncludeRegexTransform: 
-
-/home/hieunguyen/Projects/tomato_classification/classifyByColor.cpp
-classifyByColor.h
-/home/hieunguyen/Projects/tomato_classification/classifyByColor.h
-colorProfile.h
-/home/hieunguyen/Projects/tomato_classification/colorProfile.h
-
-/home/hieunguyen/Projects/tomato_classification/classifyByColor.h
-opencv2/opencv.hpp
--
-iostream
--
 
 /home/hieunguyen/Projects/tomato_classification/colorProfile.cpp
 colorProfile.h
@@ -28,39 +16,27 @@ opencv2/opencv.hpp
 iostream
 -
 
-/home/hieunguyen/Projects/tomato_classification/detection.cpp
-detection.h
-/home/hieunguyen/Projects/tomato_classification/detection.h
+/home/hieunguyen/Projects/tomato_classification/function.cpp
+function.h
+/home/hieunguyen/Projects/tomato_classification/function.h
 
-/home/hieunguyen/Projects/tomato_classification/detection.h
+/home/hieunguyen/Projects/tomato_classification/function.h
 opencv2/opencv.hpp
 -
 iostream
 -
+colorProfile.h
+/home/hieunguyen/Projects/tomato_classification/colorProfile.h
 
 /home/hieunguyen/Projects/tomato_classification/main.cpp
 iostream
 -
 opencv2/opencv.hpp
 -
-segmentation.h
-/home/hieunguyen/Projects/tomato_classification/segmentation.h
-detection.h
-/home/hieunguyen/Projects/tomato_classification/detection.h
-classifyByColor.h
-/home/hieunguyen/Projects/tomato_classification/classifyByColor.h
-
-/home/hieunguyen/Projects/tomato_classification/segmentation.cpp
-segmentation.h
-/home/hieunguyen/Projects/tomato_classification/segmentation.h
 colorProfile.h
 /home/hieunguyen/Projects/tomato_classification/colorProfile.h
-
-/home/hieunguyen/Projects/tomato_classification/segmentation.h
-opencv2/opencv.hpp
--
-iostream
--
+function.h
+/home/hieunguyen/Projects/tomato_classification/function.h
 
 /usr/local/include/opencv/cxcore.h
 opencv2/core/core_c.h

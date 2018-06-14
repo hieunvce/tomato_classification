@@ -4,11 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/hieunguyen/Projects/tomato_classification/classifyByColor.cpp" "/home/hieunguyen/Projects/tomato_classification/CMakeFiles/TomatoClassification.dir/classifyByColor.cpp.o"
   "/home/hieunguyen/Projects/tomato_classification/colorProfile.cpp" "/home/hieunguyen/Projects/tomato_classification/CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o"
-  "/home/hieunguyen/Projects/tomato_classification/detection.cpp" "/home/hieunguyen/Projects/tomato_classification/CMakeFiles/TomatoClassification.dir/detection.cpp.o"
+  "/home/hieunguyen/Projects/tomato_classification/function.cpp" "/home/hieunguyen/Projects/tomato_classification/CMakeFiles/TomatoClassification.dir/function.cpp.o"
   "/home/hieunguyen/Projects/tomato_classification/main.cpp" "/home/hieunguyen/Projects/tomato_classification/CMakeFiles/TomatoClassification.dir/main.cpp.o"
-  "/home/hieunguyen/Projects/tomato_classification/segmentation.cpp" "/home/hieunguyen/Projects/tomato_classification/CMakeFiles/TomatoClassification.dir/segmentation.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
