@@ -13,5 +13,15 @@ using namespace cv;
 
 Color findColor(Mat LabImage);
 Mat segmentImage(Mat LabImage, Color colorID);
-RotatedRect detectROI(Mat segImage);
+vector<Point> detectROI(Mat segImage);
+void calculateSize(vector<Point> ROI);
+Mat createMask(Size sizeOfMask, vector<Point> ROI);
+
+
 #endif //TOMATOCLASSIFICATION_FUNCTION_H
+
+/**
+ * DONE: Create mask from ROI
+ * TODO: If (pixel inside mask) && (color(pixel)=OTHER) => count++
+ * TODO: If count>MAX_VALUE => fail,
+*/

@@ -8,9 +8,9 @@ using namespace cv;
 
 
 int main(int argc, char** argv) {
+    Mat srcImage = imread("./test_image/Yellow/tomato1.jpg",CV_LOAD_IMAGE_COLOR);
+    if (!srcImage.data){cout << "ERROR: Can't open image!" << endl; exit(1);}
 
-    //Mat srcImage = imread(argv[1],CV_LOAD_IMAGE_COLOR);
-    Mat srcImage = imread("./test_image/Bad/l3.jpg",CV_LOAD_IMAGE_COLOR);
     Mat LabImage(srcImage.rows,srcImage.cols,CV_8UC3);
     cvtColor(srcImage,LabImage,COLOR_BGR2Lab);
                 ///for debug
@@ -21,28 +21,37 @@ int main(int argc, char** argv) {
     Mat segImage(srcImage.rows,srcImage.cols,CV_8UC3);
 
     Color colorID=findColor(LabImage);
-    segImage = segmentImage(srcImage,colorID);
+    if (colorID != OTHER) {
+        segImage = segmentImage(LabImage, colorID);
 
                 ///for debug
-                namedWindow("red segment image",WINDOW_AUTOSIZE);
-                imshow("red segment image",segImage);
-                cout << "segImage: rows= " << segImage.rows << "\t columns= " << segImage.cols <<endl;
+                cout << "colorID=" << colorID << endl;
+                namedWindow("red segment image", WINDOW_AUTOSIZE);
+                imshow("red segment image", segImage);
+                cout << "segImage: rows= " << segImage.rows << "\t columns= " << segImage.cols << endl;
                 //end debug
 
-    RotatedRect boundingBox;
-    boundingBox=detectROI(segImage);
-    //Calculate ellipse from rotated rectangle and draw to srcImage
-    Size axes;
-    axes.height = boundingBox.size.height/2;
-    axes.width = boundingBox.size.width/2;
+        vector<Point> ROI = {Point(0, 0)};
+        ROI = detectROI(segImage);
+        calculateSize(ROI);
 
-    Scalar color = Scalar(0,0,0);
-    cout << endl << "Tomato size: Height: " << axes.height << " | Width: " << axes.width << endl;
-    ellipse(srcImage,boundingBox.center,axes,boundingBox.angle,0.0,360.0,color,2,8,0);
+        Scalar color = Scalar(0, 0, 0);
+        polylines(srcImage,ROI,true,color,2,8);
+        namedWindow("Detected Image", WINDOW_AUTOSIZE);
+        imshow("Detected Image", srcImage);
 
-    namedWindow("Detected Image",WINDOW_AUTOSIZE);
-    imshow("Detected Image",srcImage);
+        Size sizeOfMask;
+        sizeOfMask.width=srcImage.cols;
+        sizeOfMask.height=srcImage.rows;
+        Mat maskImage=createMask(sizeOfMask,ROI);
+        namedWindow("Mask Image", WINDOW_AUTOSIZE);
+        imshow("Mask Image", maskImage);
 
+
+
+    } else {
+        cout << "Skipped because of 0 tomato detected..." << endl;
+    }
     waitKey(0);
     return 0;
 }

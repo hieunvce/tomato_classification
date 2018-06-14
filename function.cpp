@@ -4,6 +4,7 @@
 
 #include "function.h"
 
+#define MIN_NUMBER_PIXEL 20
 /**
  * findColor: Find main color of a tomato.
  * We count number of RED pixel, YELLOW pixel, GREEN pixel
@@ -40,14 +41,16 @@ Color findColor(Mat LabImage){
     }
 
     /**<Compare and return main color*/
-    if (countRed>=countYellow && countRed>=countGreen) {
-        return RED;
-    }
-    else if (countYellow>=countRed && countYellow>=countGreen) {
-        return YELLOW;
-    }
-    else {
-        return GREEN;
+    if (countRed >= MIN_NUMBER_PIXEL || countYellow >= MIN_NUMBER_PIXEL || countGreen >= MIN_NUMBER_PIXEL) {
+        if (countRed >= countYellow && countRed >= countGreen) {
+            return RED;
+        } else if (countYellow >= countRed && countYellow >= countGreen) {
+            return YELLOW;
+        } else {
+            return GREEN;
+        }
+    } else {
+        return OTHER;
     }
 }
 
@@ -97,12 +100,12 @@ Mat segmentImage(Mat LabImage, Color colorID){
 
 /**
  * detectROI: Detect ROI which have tomato in image
- * It returns a rotated rectangle that best fit with ROI.
- * Return RotatedRect
+ * It returns a contour is the ROI.
+ * Return vector<Point>
  * @param segImage
  * @return
  */
-RotatedRect detectROI(Mat segImage){
+vector<Point> detectROI(Mat segImage){
     // Find edge using Canny algorithm
     Mat edgeImage,kernel;
     cvtColor(segImage,segImage,CV_BGR2GRAY);
@@ -118,8 +121,7 @@ RotatedRect detectROI(Mat segImage){
     //Check if contour existence
     if (contours.size()==0)
     {
-        RotatedRect tomatoBox(Point2f(2,2),Size2f(1,1),0);
-        return tomatoBox;
+        exit(-1);
     }
 
     //Convexthull contour
@@ -141,9 +143,39 @@ RotatedRect detectROI(Mat segImage){
         }
     }
 
-    //Fit an ellipse to detected contour
-    RotatedRect tomatoBox;
-    tomatoBox = fitEllipse(largestContour);
+    return largestContour;
+}
 
-    return tomatoBox;
+/**
+ * calculateSize: calculate size of tomato (size of ROI)
+ * Print size to console
+ * Return: void
+ * @param ROI
+ */
+void calculateSize(vector<Point> ROI){
+    //Fit an ellipse to ROI
+    RotatedRect boundingBox;
+    boundingBox = fitEllipse(ROI);
+    //Calculate ellipse from rotated rectangle
+    Size axes;
+    axes.height = (int)boundingBox.size.height / 2;
+    axes.width = (int)boundingBox.size.width / 2;
+
+    cout << endl << "Tomato size: Height: " << axes.height << " | Width: " << axes.width << endl;
+}
+
+/**
+ * createMask: Create a mask image that fill ROI
+ * Return: Mat image
+ * @param sizeOfMask
+ * @param ROI
+ * @return
+ */
+Mat createMask(Size sizeOfMask, vector<Point> ROI){
+    Mat mask=Mat::zeros(sizeOfMask,CV_8UC3);
+    vector<vector<Point> > ROI_Array;
+    ROI_Array.push_back(ROI);
+    Scalar white = Scalar(255, 255, 255);
+    fillPoly(mask,ROI_Array,white);
+    return mask;
 }
