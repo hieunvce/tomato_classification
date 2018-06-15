@@ -14,14 +14,14 @@ using namespace cv;
 Color findColor(Mat LabImage);
 Mat segmentImage(Mat LabImage, Color colorID);
 vector<Point> detectROI(Mat segImage);
-void calculateSize(vector<Point> ROI);
+Size2i calculateSize(vector<Point> ROI);
 Mat createMask(Size sizeOfMask, vector<Point> ROI);
+int countBadPixel(Mat LabImage, Mat maskImage);
 
+int runOnImage(Mat image);
 
 #endif //TOMATOCLASSIFICATION_FUNCTION_H
 
 /**
- * DONE: Create mask from ROI
- * TODO: If (pixel inside mask) && (color(pixel)=OTHER) => count++
  * TODO: If count>MAX_VALUE => fail,
 */

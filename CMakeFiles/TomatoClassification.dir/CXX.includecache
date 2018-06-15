@@ -38,6 +38,14 @@ colorProfile.h
 function.h
 /home/hieunguyen/Projects/tomato_classification/function.h
 
+/home/hieunguyen/Projects/tomato_classification/utils.cpp
+utils.h
+/home/hieunguyen/Projects/tomato_classification/utils.h
+colorProfile.h
+/home/hieunguyen/Projects/tomato_classification/colorProfile.h
+
+/home/hieunguyen/Projects/tomato_classification/utils.h
+
 /usr/local/include/opencv/cxcore.h
 opencv2/core/core_c.h
 /usr/local/include/opencv/opencv2/core/core_c.h

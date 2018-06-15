@@ -149,23 +149,23 @@ vector<Point> detectROI(Mat segImage){
 /**
  * calculateSize: calculate size of tomato (size of ROI)
  * Print size to console
- * Return: void
+ * Return: Size2i
  * @param ROI
  */
-void calculateSize(vector<Point> ROI){
+Size2i calculateSize(vector<Point> ROI){
     //Fit an ellipse to ROI
     RotatedRect boundingBox;
     boundingBox = fitEllipse(ROI);
     //Calculate ellipse from rotated rectangle
-    Size axes;
+    Size2i axes;
     axes.height = (int)boundingBox.size.height / 2;
     axes.width = (int)boundingBox.size.width / 2;
 
-    cout << endl << "Tomato size: Height: " << axes.height << " | Width: " << axes.width << endl;
+    return axes;
 }
 
 /**
- * createMask: Create a mask image that fill ROI
+ * createMask: Create a mask image that fill ROI with 255,255,255
  * Return: Mat image
  * @param sizeOfMask
  * @param ROI
@@ -174,8 +174,52 @@ void calculateSize(vector<Point> ROI){
 Mat createMask(Size sizeOfMask, vector<Point> ROI){
     Mat mask=Mat::zeros(sizeOfMask,CV_8UC3);
     vector<vector<Point> > ROI_Array;
+    // Push ROI to an array to pass as argument to fillPoly function
     ROI_Array.push_back(ROI);
     Scalar white = Scalar(255, 255, 255);
     fillPoly(mask,ROI_Array,white);
     return mask;
+}
+
+/**
+ * countBadPixel: Count number of bad pixels on tomato
+ * + Get LabImage[pixel]
+ * + If (maskImage[pixel]==1 && color[pixel]=OTHER) => badSegImage[pixel]=1, countBadPixel++, else =0
+ * + Return: int numberOfBadPixels
+ * + In future:
+ * +            + Find contours of badSegImage
+ * +            + Return: vector<vector<Point> > contains Bad contours
+ * @return
+ */
+int countBadPixel(Mat LabImage, Mat maskImage){
+    cvtColor(maskImage,maskImage,COLOR_BGR2GRAY);
+    int numberOfBadPixel=0;
+    // Segment Lab image to contain only Bad Region
+    Mat badSegImage(LabImage.rows, LabImage.cols,CV_8UC3);
+    for (int i=0;i<LabImage.rows;++i) {
+        const uchar *lab_data = LabImage.ptr<uchar>(i);
+        uchar *seg_data = badSegImage.ptr<uchar>(i);
+        for (int j = 0; j < LabImage.cols; ++j) {
+            lab_data++;//dismiss L value
+            int a = *lab_data++;
+            a -= 128;
+            int b = *lab_data++;
+            b -= 128;
+            if (maskImage.at<uchar>(i,j)==255 && color(a, b) == OTHER) {
+                *seg_data++ = 255;
+                *seg_data++ = 255;
+                *seg_data++ = 255;
+                numberOfBadPixel++;
+            } else {
+                *seg_data++ = 0;
+                *seg_data++ = 0;
+                *seg_data++ = 0;
+            }
+        }
+    }
+    return numberOfBadPixel;
+}
+
+int runOnImage(Mat image){
+
 }
