@@ -8,43 +8,38 @@ using namespace cv;
 
 
 int main(int argc, char** argv) {
-    Mat srcImage = imread("./test_image/Bad/asd.png",CV_LOAD_IMAGE_COLOR);
+    Mat srcImage = imread(argv[1],CV_LOAD_IMAGE_COLOR);
     if (!srcImage.data){cout << "ERROR: Can't open image!" << endl; exit(1);}
+    Size standardSize(500,500);
+    resize(srcImage,srcImage,standardSize);
 
-    Mat LabImage(srcImage.rows,srcImage.cols,CV_8UC3);
-    cvtColor(srcImage,LabImage,COLOR_BGR2Lab);
-
-    Mat segImage(srcImage.rows,srcImage.cols,CV_8UC3);
-
-    Color colorID=findColor(LabImage);
-
-    if (colorID != OTHER) {
-        segImage = segmentImage(LabImage, colorID);
-
-        vector<Point> ROI = {Point(0, 0)};
-        ROI = detectROI(segImage);
-        Size2i tomatoSize;
-        tomatoSize=calculateSize(ROI);
-        cout << endl << "Tomato size: Height: " << tomatoSize.height << " | Width: " << tomatoSize.width << endl;
-
-        Size sizeOfMask;
-        sizeOfMask.width=srcImage.cols;
-        sizeOfMask.height=srcImage.rows;
-        Mat maskImage=createMask(sizeOfMask,ROI);
-
-        int badPixels=0;
-        badPixels= countBadPixel(LabImage, maskImage);
-        cout << "Number of Bad pixels: " << badPixels << endl;
-
-        //-------For debugging-----------------------------------------
-        Scalar color = Scalar(0, 0, 0);
-        polylines(srcImage,ROI,true,color,2,8);
-        namedWindow("Detected Image", WINDOW_AUTOSIZE);
-        imshow("Detected Image", srcImage);
-        //------End---------------------------------------------------
-
-    } else {
-        cout << "Skipped because of 0 tomato detected..." << endl;
+    STATUS status=runOnImage(srcImage);
+    cout << "TOMATO GRADE: ";
+    switch (status){
+        case RED_NORMAL:
+            cout << "RED_NORMAL"<< endl;
+            break;
+        case RED_BAD:
+            cout << "RED_BAD"<< endl;
+            break;
+        case YELLOW_NORMAL:
+            cout << "YELLOW_NORMAL"<< endl;
+            break;
+        case YELLOW_BAD:
+            cout << "YELLOW_BAD"<< endl;
+            break;
+        case GREEN_NORMAL:
+            cout << "GREEN_NORMAL" << endl;
+            break;
+        case GREEN_BAD:
+            cout << "GREEN_BAD" << endl;
+            break;
+        case SKIP_SUCCESS:
+            cout << "SKIP_SUCCESS" << endl;
+            break;
+        case FAIL:
+            cout << "FAIL" << endl;
+            exit(1);
     }
     waitKey(0);
     return 0;

@@ -191,35 +191,136 @@ Mat createMask(Size sizeOfMask, vector<Point> ROI){
  * +            + Return: vector<vector<Point> > contains Bad contours
  * @return
  */
-int countBadPixel(Mat LabImage, Mat maskImage){
-    cvtColor(maskImage,maskImage,COLOR_BGR2GRAY);
-    int numberOfBadPixel=0;
-    // Segment Lab image to contain only Bad Region
-    Mat badSegImage(LabImage.rows, LabImage.cols,CV_8UC3);
-    for (int i=0;i<LabImage.rows;++i) {
+int countBadPixel(Mat LabImage, Mat maskImage) {
+    cvtColor(maskImage, maskImage, COLOR_BGR2GRAY);
+    int numberOfBadPixel = 0;
+    for (int i = 0; i < LabImage.rows; ++i) {
         const uchar *lab_data = LabImage.ptr<uchar>(i);
-        uchar *seg_data = badSegImage.ptr<uchar>(i);
         for (int j = 0; j < LabImage.cols; ++j) {
             lab_data++;//dismiss L value
             int a = *lab_data++;
             a -= 128;
             int b = *lab_data++;
             b -= 128;
-            if (maskImage.at<uchar>(i,j)==255 && color(a, b) == OTHER) {
-                *seg_data++ = 255;
-                *seg_data++ = 255;
-                *seg_data++ = 255;
+            if (maskImage.at<uchar>(i, j) == 255 && color(a, b) == OTHER) {
                 numberOfBadPixel++;
-            } else {
-                *seg_data++ = 0;
-                *seg_data++ = 0;
-                *seg_data++ = 0;
             }
         }
     }
     return numberOfBadPixel;
 }
 
-int runOnImage(Mat image){
+/**
+ * gradeTomato: Grade Tomato base on color and number of bad pixels
+ * if (number of pixel > MAX_BAD_PIXEL) then tomato is bad.
+ * Return: STATUS is grade of tomato
+ * @param colorID
+ * @param nOfBadPixels
+ * @return
+ */
+STATUS gradeTomato(Color colorID, int nOfBadPixels){
+    int badTomato = 0;
+    if (nOfBadPixels > MAX_BAD_PIXEL)
+        badTomato = 1;
+    switch (colorID) {
+        case RED:
+            if (badTomato)
+                return RED_BAD;
+            else
+                return RED_NORMAL;
+        case YELLOW:
+            if (badTomato)
+                return YELLOW_BAD;
+            else
+                return YELLOW_NORMAL;
+        case GREEN:
+            if (badTomato)
+                return GREEN_BAD;
+            else
+                return GREEN_NORMAL;
+        default:
+            return SKIP_SUCCESS;
+    }
+}
 
+/**
+ * showInfo: Print to console info about tomato like color, size, number of bad pixels
+ * @param tomatoColor
+ * @param sizeOfTomato
+ * @param nOfBadPixels
+ */
+void showInfo(Color tomatoColor, Size2i sizeOfTomato, int nOfBadPixels){
+    switch (tomatoColor) {
+        case RED:
+            cout << "RED TOMATO \t|";
+            break;
+        case YELLOW:
+            cout << "YELLOW TOMATO \t|";
+            break;
+        case GREEN:
+            cout << "GREEN TOMATO \t|";
+            break;
+    }
+
+    cout << " SIZE: " << sizeOfTomato.height << " x " << sizeOfTomato.width << "\t|";
+    cout << " BAD PIXELS: " << nOfBadPixels << endl;
+
+}
+
+/**
+ * runOnImage: Run all function on an image
+ * -----------------------------------------------------------------------------
+ * findColor -> segmentImage -> detecROI -> calculateSize
+ * -> createMask -> countBadPixel -> gradeTomato
+ * -----------------------------------------------------------------------------
+ * Return: grade of tomato or status of function
+ * @param srcImage
+ * @return
+ */
+STATUS runOnImage(Mat srcImage){
+    try {
+        Mat LabImage(srcImage.rows, srcImage.cols, CV_8UC3);
+        cvtColor(srcImage, LabImage, COLOR_BGR2Lab);
+
+        Color colorID = findColor(LabImage);
+
+        if (colorID != OTHER) {
+            Mat segImage(srcImage.rows, srcImage.cols, CV_8UC3);
+            segImage = segmentImage(LabImage, colorID);
+
+            vector<Point> ROI = {Point(0, 0)};
+            ROI = detectROI(segImage);
+
+            Size2i tomatoSize;
+            tomatoSize = calculateSize(ROI);
+
+            Size sizeOfMask;
+            sizeOfMask.width = srcImage.cols;
+            sizeOfMask.height = srcImage.rows;
+            Mat maskImage = createMask(sizeOfMask, ROI);
+
+            int badPixels = 0;
+            badPixels = countBadPixel(LabImage, maskImage);
+
+            showInfo(colorID, tomatoSize, badPixels);
+            //-------Show image after detect-----------------------------------------
+            Scalar color = Scalar(0, 0, 0);
+            polylines(srcImage, ROI, true, color, 2, 8);
+            namedWindow("Image", WINDOW_AUTOSIZE);
+            imshow("Image", srcImage);
+            //------End show image after detect--------------------------------------
+
+            return gradeTomato(colorID,badPixels);
+
+
+        } else {
+            cout << "Skipped because of 0 tomato detected..." << endl;
+            return SKIP_SUCCESS;
+        }
+    }
+    catch (exception &e)
+    {
+        cout << "Standard exception: " << e.what() << endl;
+        return FAIL;
+    }
 }

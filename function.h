@@ -8,6 +8,19 @@
 using namespace std;
 using namespace cv;
 
+enum STATUS{
+    FAIL=-1,
+    SKIP_SUCCESS=0,
+    RED_NORMAL,
+    RED_BAD,
+    YELLOW_NORMAL,
+    YELLOW_BAD,
+    GREEN_NORMAL,
+    GREEN_BAD
+};
+
+#define MAX_BAD_PIXEL 500
+
 #ifndef TOMATOCLASSIFICATION_FUNCTION_H
 #define TOMATOCLASSIFICATION_FUNCTION_H
 
@@ -17,11 +30,12 @@ vector<Point> detectROI(Mat segImage);
 Size2i calculateSize(vector<Point> ROI);
 Mat createMask(Size sizeOfMask, vector<Point> ROI);
 int countBadPixel(Mat LabImage, Mat maskImage);
-
-int runOnImage(Mat image);
+STATUS gradeTomato(Color colorID, int nOfBadPixels);
+void showInfo(Color tomatoColor, Size2i sizeOfTomato, int nOfBadPixels);
+STATUS runOnImage(Mat srcImage);
 
 #endif //TOMATOCLASSIFICATION_FUNCTION_H
 
 /**
- * TODO: If count>MAX_VALUE => fail,
+ * TODO: Use Excel to calculate MAX_BAD_PIXEL
 */
