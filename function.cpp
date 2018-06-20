@@ -278,6 +278,8 @@ void showInfo(Color tomatoColor, Size2i sizeOfTomato, int nOfBadPixels){
  */
 STATUS runOnImage(Mat srcImage){
     try {
+        Size standardSize(500,500);
+        resize(srcImage,srcImage,standardSize);
         Mat LabImage(srcImage.rows, srcImage.cols, CV_8UC3);
         cvtColor(srcImage, LabImage, COLOR_BGR2Lab);
 
@@ -301,26 +303,11 @@ STATUS runOnImage(Mat srcImage){
             int badPixels = 0;
             badPixels = countBadPixel(LabImage, maskImage);
                     //----------SHOW IMAGES FOR DEBUGGING-----------------------------------------------------
-
-                    namedWindow("lab image",WINDOW_AUTOSIZE);
-                    imshow("lab image",LabImage);
-                    cout << "LabImage: rows= " << LabImage.rows << "\t columns= " << LabImage.cols <<endl;
-
                     ///for debug
                     cout << "colorID=" << colorID << endl;
-                    namedWindow("red segment image", WINDOW_AUTOSIZE);
-                    imshow("red segment image", segImage);
-                    cout << "segImage: rows= " << segImage.rows << "\t columns= " << segImage.cols << endl;
+                    namedWindow("segment image", WINDOW_AUTOSIZE);
+                    imshow("segment image", segImage);
                     //end debug
-
-                    namedWindow("Mask Image", WINDOW_AUTOSIZE);
-                    imshow("Mask Image", maskImage);
-
-                    Scalar color = Scalar(0, 0, 0);
-                    polylines(srcImage,ROI,true,color,2,8);
-                    namedWindow("Detected Image", WINDOW_AUTOSIZE);
-                    imshow("Detected Image", srcImage);
-
                     //--------END SHOW IMAGES FOR DEBUGGING --------------------------------------------------
             showInfo(colorID, tomatoSize, badPixels);
             //-------Show image after detect-----------------------------------------
@@ -329,7 +316,6 @@ STATUS runOnImage(Mat srcImage){
             namedWindow("Image", WINDOW_AUTOSIZE);
             imshow("Image", srcImage);
             //------End show image after detect--------------------------------------
-
             return gradeTomato(colorID,badPixels);
 
 
