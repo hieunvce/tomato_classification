@@ -37,7 +37,7 @@ Color findColor(Mat LabImage){
                 countGreen++;
         }
     }
-    cout << countRed << ", " << countYellow << ", " << countGreen << endl;
+    //cout << countRed << ", " << countYellow << ", " << countGreen << endl;
     /**<Compare and return main color*/
     if (countRed >= MIN_NUMBER_PIXEL || countYellow >= MIN_NUMBER_PIXEL || countGreen >= MIN_NUMBER_PIXEL) {
         if (countRed >= countYellow && countRed >= countGreen) {
@@ -74,9 +74,7 @@ Mat segmentImage(Mat LabImage, Color colorID){
             l=l*100/255;
             int a = *lab_data++-128;
             int b = *lab_data++-128;
-            //for debugging
-                    //cout << "(" << a << ", " << b << ") | sqrt(a^2+b^2)= " << sqrt(a*a+b*b) << endl;
-                            //cout << sqrt(a*a+b*b) << endl;
+
             if (color(l,a, b) == colorID) {
                 *seg_data++ = 255;
                 *seg_data++ = 255;
@@ -276,10 +274,10 @@ void showInfo(Color tomatoColor, Size2i sizeOfTomato, int nOfBadPixels){
  * @param srcImage
  * @return
  */
-STATUS runOnImage(Mat srcImage){
+Mat runOnImage(Mat srcImage){
     try {
-        Size standardSize(500,500);
-        resize(srcImage,srcImage,standardSize);
+        //Size standardSize(500,500);
+        //resize(srcImage,srcImage,standardSize);
         Mat LabImage(srcImage.rows, srcImage.cols, CV_8UC3);
         cvtColor(srcImage, LabImage, COLOR_BGR2Lab);
 
@@ -302,31 +300,32 @@ STATUS runOnImage(Mat srcImage){
 
             int badPixels = 0;
             badPixels = countBadPixel(LabImage, maskImage);
-                    //----------SHOW IMAGES FOR DEBUGGING-----------------------------------------------------
+                    /*//----------SHOW IMAGES FOR DEBUGGING-----------------------------------------------------
                     ///for debug
                     cout << "colorID=" << colorID << endl;
                     namedWindow("segment image", WINDOW_AUTOSIZE);
                     imshow("segment image", segImage);
                     //end debug
-                    //--------END SHOW IMAGES FOR DEBUGGING --------------------------------------------------
-            showInfo(colorID, tomatoSize, badPixels);
+                    *///--------END SHOW IMAGES FOR DEBUGGING --------------------------------------------------
+            //showInfo(colorID, tomatoSize, badPixels);
             //-------Show image after detect-----------------------------------------
             Scalar black_color = Scalar(0, 0, 0);
             polylines(srcImage, ROI, true, black_color, 2, 8);
-            namedWindow("Image", WINDOW_AUTOSIZE);
+            return srcImage;
+            /*namedWindow("Image", WINDOW_AUTOSIZE);
             imshow("Image", srcImage);
             //------End show image after detect--------------------------------------
             return gradeTomato(colorID,badPixels);
-
+             */
 
         } else {
             cout << "Skipped because of 0 tomato detected..." << endl;
-            return SKIP_SUCCESS;
+            return srcImage;
         }
     }
     catch (exception &e)
     {
         cout << "Standard exception: " << e.what() << endl;
-        return FAIL;
+        exit(-12);
     }
 }
