@@ -2,20 +2,37 @@
 // Created by henry on 3/4/18.
 //
 #include "colorProfile.h"
+#include <math.h>
 
-bool isRed(int a, int b)
+
+bool isRed(int l, int a, int b)
 {
-    return (a >= -5) && (a <= 75) && (b >= 20) && (b <= 65) && abs(a - b) >= 0 && abs(a - b) <= 21;
+    float redTan=(float)abs(b)/abs(a);
+    double redAtan=atan(redTan)*180/PI;
+    if (a > 20 && l > 10 && l < 90)
+        if (redAtan>0.0 && redAtan<45.0)
+            return true;
+    return false;
 }
 
-bool isGreen(int a, int b)
+bool isGreen(int l, int a, int b)
 {
-    return (a >= -50) && (a <= -10) && (b >= 10) && (b <= 85) && abs(a - b) >= 40 && abs(a - b) <= 100;
+    float greenTan=(float)abs(b)/abs(a);
+    double greenAtan=atan(greenTan)*180/PI;
+    if (a < -10 && l > 10 && l < 90)
+        if (greenAtan>30.0 && greenAtan<80.0)
+            return true;
+    return false;
 }
 
-bool isYellow(int a, int b)
+bool isYellow(int l, int a, int b)
 {
-    return (a >= -10) && (a <= 40) && (b >= 50) && (b <= 90) && abs(a - b) >= 25 && abs(a - b) <= 75;
+    float yellowTan=(float)a/abs(b);
+    double yellowAtan=atan(yellowTan)*180/PI;
+    if (b > 30 && l > 42 && l < 90)
+        if (yellowAtan>-10.0 && yellowAtan<45.0)
+            return true;
+    return false;
 }
 
 /**
@@ -24,13 +41,13 @@ bool isYellow(int a, int b)
  * @param b
  * @return
  */
-Color color(int a, int b)
+Color color(int l, int a, int b)
 {
-    if (isRed(a,b))
+    if (isRed(l,a,b))
         return RED;
-    else if (isYellow(a,b))
+    else if (isYellow(l,a,b))
         return YELLOW;
-    else if (isGreen(a,b))
+    else if (isGreen(l,a,b))
         return GREEN;
     else
         return OTHER;

@@ -9,6 +9,8 @@
 /home/hieunguyen/Projects/tomato_classification/colorProfile.cpp
 colorProfile.h
 /home/hieunguyen/Projects/tomato_classification/colorProfile.h
+math.h
+-
 
 /home/hieunguyen/Projects/tomato_classification/colorProfile.h
 opencv2/opencv.hpp

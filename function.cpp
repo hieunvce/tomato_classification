@@ -24,12 +24,9 @@ Color findColor(Mat LabImage){
     for (int i=0;i<LabImage.rows;++i) {
         const uchar *lab_data = LabImage.ptr<uchar>(i);
         for (int j = 0; j < LabImage.cols; ++j) {
-
             lab_data++; // dismiss L value
             int a = *lab_data++;
-            a-=128;
             int b = *lab_data++;
-            b-=128;
 
             if (isRed(a,b))
                 countRed++;
@@ -39,7 +36,7 @@ Color findColor(Mat LabImage){
                 countGreen++;
         }
     }
-
+    cout << countRed << ", " << countYellow << ", " << countGreen << endl;
     /**<Compare and return main color*/
     if (countRed >= MIN_NUMBER_PIXEL || countYellow >= MIN_NUMBER_PIXEL || countGreen >= MIN_NUMBER_PIXEL) {
         if (countRed >= countYellow && countRed >= countGreen) {
@@ -74,9 +71,10 @@ Mat segmentImage(Mat LabImage, Color colorID){
         for (int j = 0; j < LabImage.cols; ++j) {
             lab_data++;//dismiss L value
             int a = *lab_data++;
-            a -= 128;
             int b = *lab_data++;
-            b -= 128;
+            //for debugging
+                    //cout << "(" << a << ", " << b << ") | sqrt(a^2+b^2)= " << sqrt(a*a+b*b) << endl;
+                            //cout << sqrt(a*a+b*b) << endl;
             if (color(a, b) == colorID) {
                 *seg_data++ = 255;
                 *seg_data++ = 255;
@@ -301,11 +299,32 @@ STATUS runOnImage(Mat srcImage){
 
             int badPixels = 0;
             badPixels = countBadPixel(LabImage, maskImage);
+                    //----------SHOW IMAGES FOR DEBUGGING-----------------------------------------------------
 
+                    namedWindow("lab image",WINDOW_AUTOSIZE);
+                    imshow("lab image",LabImage);
+                    cout << "LabImage: rows= " << LabImage.rows << "\t columns= " << LabImage.cols <<endl;
+
+                    ///for debug
+                    cout << "colorID=" << colorID << endl;
+                    namedWindow("red segment image", WINDOW_AUTOSIZE);
+                    imshow("red segment image", segImage);
+                    cout << "segImage: rows= " << segImage.rows << "\t columns= " << segImage.cols << endl;
+                    //end debug
+
+                    namedWindow("Mask Image", WINDOW_AUTOSIZE);
+                    imshow("Mask Image", maskImage);
+
+                    Scalar color = Scalar(0, 0, 0);
+                    polylines(srcImage,ROI,true,color,2,8);
+                    namedWindow("Detected Image", WINDOW_AUTOSIZE);
+                    imshow("Detected Image", srcImage);
+
+                    //--------END SHOW IMAGES FOR DEBUGGING --------------------------------------------------
             showInfo(colorID, tomatoSize, badPixels);
             //-------Show image after detect-----------------------------------------
-            Scalar color = Scalar(0, 0, 0);
-            polylines(srcImage, ROI, true, color, 2, 8);
+            Scalar black_color = Scalar(0, 0, 0);
+            polylines(srcImage, ROI, true, black_color, 2, 8);
             namedWindow("Image", WINDOW_AUTOSIZE);
             imshow("Image", srcImage);
             //------End show image after detect--------------------------------------
