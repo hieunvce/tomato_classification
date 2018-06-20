@@ -24,15 +24,16 @@ Color findColor(Mat LabImage){
     for (int i=0;i<LabImage.rows;++i) {
         const uchar *lab_data = LabImage.ptr<uchar>(i);
         for (int j = 0; j < LabImage.cols; ++j) {
-            lab_data++; // dismiss L value
-            int a = *lab_data++;
-            int b = *lab_data++;
+            int l = *lab_data++;
+            l=l*100/255;
+            int a = *lab_data++-128;
+            int b = *lab_data++-128;
 
-            if (isRed(a,b))
+            if (isRed(l,a,b))
                 countRed++;
-            else if (isYellow(a,b))
+            else if (isYellow(l,a,b))
                 countYellow++;
-            else if (isGreen(a,b))
+            else if (isGreen(l,a,b))
                 countGreen++;
         }
     }
@@ -69,13 +70,14 @@ Mat segmentImage(Mat LabImage, Color colorID){
         const uchar *lab_data = LabImage.ptr<uchar>(i);
         uchar *seg_data = segImage.ptr<uchar>(i);
         for (int j = 0; j < LabImage.cols; ++j) {
-            lab_data++;//dismiss L value
-            int a = *lab_data++;
-            int b = *lab_data++;
+            int l = *lab_data++;
+            l=l*100/255;
+            int a = *lab_data++-128;
+            int b = *lab_data++-128;
             //for debugging
                     //cout << "(" << a << ", " << b << ") | sqrt(a^2+b^2)= " << sqrt(a*a+b*b) << endl;
                             //cout << sqrt(a*a+b*b) << endl;
-            if (color(a, b) == colorID) {
+            if (color(l,a, b) == colorID) {
                 *seg_data++ = 255;
                 *seg_data++ = 255;
                 *seg_data++ = 255;
@@ -195,12 +197,11 @@ int countBadPixel(Mat LabImage, Mat maskImage) {
     for (int i = 0; i < LabImage.rows; ++i) {
         const uchar *lab_data = LabImage.ptr<uchar>(i);
         for (int j = 0; j < LabImage.cols; ++j) {
-            lab_data++;//dismiss L value
-            int a = *lab_data++;
-            a -= 128;
-            int b = *lab_data++;
-            b -= 128;
-            if (maskImage.at<uchar>(i, j) == 255 && color(a, b) == OTHER) {
+            int l = *lab_data++;
+            l=l*100/255;
+            int a = *lab_data++-128;
+            int b = *lab_data++-128;
+            if (maskImage.at<uchar>(i, j) == 255 && color(l,a, b) == OTHER) {
                 numberOfBadPixel++;
             }
         }
