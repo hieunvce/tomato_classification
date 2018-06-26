@@ -10,7 +10,7 @@ vector<Vec3b> setColor={Vec3b(0,0,255),Vec3b(0,255,255),
                         Vec3b(0,255,0),Vec3b(255,255,255)};
 
 int main(int argc, char** argv) {
-    VideoCapture camera("clip.mp4");//pass o to open webcame
+    /*VideoCapture camera("clip.mp4");//pass o to open webcame
     if (!camera.isOpened()){
         cout << "Error opening video/camera!" << endl;
         return -1;
@@ -29,36 +29,27 @@ int main(int argc, char** argv) {
             break;
         Mat outFrame=runOnImage(frame);
         video.write(outFrame);
-        /*cout << "TOMATO GRADE: ";
-        switch (status){
-            case RED_NORMAL:
-                cout << "RED_NORMAL"<< endl;
-                break;
-            case RED_BAD:
-                cout << "RED_BAD"<< endl;
-                break;
-            case YELLOW_NORMAL:
-                cout << "YELLOW_NORMAL"<< endl;
-                break;
-            case YELLOW_BAD:
-                cout << "YELLOW_BAD"<< endl;
-                break;
-            case GREEN_NORMAL:
-                cout << "GREEN_NORMAL" << endl;
-                break;
-            case GREEN_BAD:
-                cout << "GREEN_BAD" << endl;
-                break;
-            case SKIP_SUCCESS:
-                cout << "SKIP_SUCCESS" << endl;
-                break;
-            case FAIL:
-                cout << "FAIL" << endl;
-                exit(1);
-        }*/
     }
     camera.release();
     video.release();
     destroyAllWindows();
+     */
+    Mat srcImage=imread("images/samples/1.jpg",CV_LOAD_IMAGE_COLOR);
+    Size standardSize(500,500);
+    resize(srcImage,srcImage,standardSize);
+    Mat LabImage(srcImage.rows, srcImage.cols, CV_8UC3);
+    cvtColor(srcImage, LabImage, COLOR_BGR2Lab);
+    Mat segImage(srcImage.rows, srcImage.cols, CV_8U);
+    Color colorID;
+    SegmentImagev2(LabImage,segImage,colorID);
+    namedWindow("lab image",CV_WINDOW_AUTOSIZE);
+    imshow("lab image",LabImage);
+    namedWindow("seg image",CV_WINDOW_AUTOSIZE);
+    imshow("seg image",segImage);
+    namedWindow("src image",CV_WINDOW_AUTOSIZE);
+    imshow("src image",srcImage);
+    cout << "Color: " << colorID << endl;
+    waitKey(0);
+
     return 0;
 }

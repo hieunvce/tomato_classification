@@ -34,6 +34,8 @@ STATUS gradeTomato(Color colorID, int nOfBadPixels);
 void showInfo(Color tomatoColor, Size2i sizeOfTomato, int nOfBadPixels);
 Mat runOnImage(Mat srcImage);
 
+void SegmentImagev2(Mat LabImage_8UC3, Mat &segImage_8U, Color &colorID);
+
 #endif //TOMATOCLASSIFICATION_FUNCTION_H
 
 /**

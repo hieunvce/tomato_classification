@@ -276,8 +276,6 @@ void showInfo(Color tomatoColor, Size2i sizeOfTomato, int nOfBadPixels){
  */
 Mat runOnImage(Mat srcImage){
     try {
-        //Size standardSize(500,500);
-        //resize(srcImage,srcImage,standardSize);
         Mat LabImage(srcImage.rows, srcImage.cols, CV_8UC3);
         cvtColor(srcImage, LabImage, COLOR_BGR2Lab);
 
@@ -328,4 +326,49 @@ Mat runOnImage(Mat srcImage){
         cout << "Standard exception: " << e.what() << endl;
         exit(-12);
     }
+}
+
+void SegmentImagev2(Mat LabImage, Mat &segImage, Color &colorID){
+    assert(LabImage.channels() == 3);
+
+    int countRedPixel=0;
+    int countYellowPixel=0;
+    int countGreenPixel=0;
+
+    /**> Begin segmentation process */
+    for (int i=0;i<LabImage.rows;++i) {
+        const uchar *lab_data = LabImage.ptr<uchar>(i);
+        uchar *seg_data = segImage.ptr<uchar>(i);
+        for (int j = 0; j < LabImage.cols; ++j) {
+            int l = *lab_data++;
+            l=l*100/255;
+            int a = *lab_data++-128;
+            int b = *lab_data++-128;
+
+            Color pixelColor=color(l,a,b);
+            switch (pixelColor){
+                case RED:
+                    countRedPixel++;
+                case YELLOW:
+                    countYellowPixel++;
+                case GREEN:
+                    countGreenPixel++;
+                    *seg_data++=255;
+                    break;
+                default:
+                    *seg_data++=0;
+            }
+        }
+    }
+
+    if (countRedPixel >= MIN_NUMBER_PIXEL || countYellowPixel >= MIN_NUMBER_PIXEL || countGreenPixel >= MIN_NUMBER_PIXEL) {
+        if (countRedPixel >= countYellowPixel && countRedPixel >= countGreenPixel) {
+            colorID=RED;
+        } else if (countYellowPixel >= countRedPixel && countYellowPixel >= countGreenPixel) {
+            colorID=YELLOW;
+        } else {
+            colorID=GREEN;
+        }
+    } else
+        colorID=OTHER;
 }
