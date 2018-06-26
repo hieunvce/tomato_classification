@@ -106,15 +106,12 @@ Mat segmentImage(Mat LabImage, Color colorID){
 vector<Point> detectROI(Mat segImage){
     // Find edge using Canny algorithm
     Mat edgeImage,kernel;
-    cvtColor(segImage,segImage,CV_BGR2GRAY);
-    Canny(segImage, segImage, 0, 255, 3);
-    morphologyEx(segImage,segImage,MORPH_CLOSE,kernel);
-    segImage.convertTo(edgeImage,CV_8U);
+    Canny(segImage, edgeImage, 0, 255, 3);
 
     //Find contour base on edge
     vector<vector<Point> > contours;
     vector<Vec4i> hierarchy;
-    findContours(edgeImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+    findContours(segImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
     //Check if contour existence
     if (contours.size()==0)
@@ -278,13 +275,11 @@ Mat runOnImage(Mat srcImage){
     try {
         Mat LabImage(srcImage.rows, srcImage.cols, CV_8UC3);
         cvtColor(srcImage, LabImage, COLOR_BGR2Lab);
-
-        Color colorID = findColor(LabImage);
-
+        Mat segImage(srcImage.rows, srcImage.cols, CV_8U);
+        Color colorID;
+        SegmentImagev2(LabImage,segImage,colorID);
+        imshow("seg image",segImage);
         if (colorID != OTHER) {
-            Mat segImage(srcImage.rows, srcImage.cols, CV_8UC3);
-            segImage = segmentImage(LabImage, colorID);
-
             vector<Point> ROI = {Point(0, 0)};
             ROI = detectROI(segImage);
 
@@ -298,24 +293,10 @@ Mat runOnImage(Mat srcImage){
 
             int badPixels = 0;
             badPixels = countBadPixel(LabImage, maskImage);
-                    /*//----------SHOW IMAGES FOR DEBUGGING-----------------------------------------------------
-                    ///for debug
-                    cout << "colorID=" << colorID << endl;
-                    namedWindow("segment image", WINDOW_AUTOSIZE);
-                    imshow("segment image", segImage);
-                    //end debug
-                    *///--------END SHOW IMAGES FOR DEBUGGING --------------------------------------------------
             //showInfo(colorID, tomatoSize, badPixels);
-            //-------Show image after detect-----------------------------------------
             Scalar black_color = Scalar(0, 0, 0);
             polylines(srcImage, ROI, true, black_color, 2, 8);
             return srcImage;
-            /*namedWindow("Image", WINDOW_AUTOSIZE);
-            imshow("Image", srcImage);
-            //------End show image after detect--------------------------------------
-            return gradeTomato(colorID,badPixels);
-             */
-
         } else {
             cout << "Skipped because of 0 tomato detected..." << endl;
             return srcImage;

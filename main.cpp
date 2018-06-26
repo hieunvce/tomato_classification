@@ -33,22 +33,13 @@ int main(int argc, char** argv) {
     camera.release();
     video.release();
     destroyAllWindows();
-     */
+    */
     Mat srcImage=imread("images/samples/1.jpg",CV_LOAD_IMAGE_COLOR);
     Size standardSize(500,500);
     resize(srcImage,srcImage,standardSize);
-    Mat LabImage(srcImage.rows, srcImage.cols, CV_8UC3);
-    cvtColor(srcImage, LabImage, COLOR_BGR2Lab);
-    Mat segImage(srcImage.rows, srcImage.cols, CV_8U);
-    Color colorID;
-    SegmentImagev2(LabImage,segImage,colorID);
-    namedWindow("lab image",CV_WINDOW_AUTOSIZE);
-    imshow("lab image",LabImage);
-    namedWindow("seg image",CV_WINDOW_AUTOSIZE);
-    imshow("seg image",segImage);
-    namedWindow("src image",CV_WINDOW_AUTOSIZE);
-    imshow("src image",srcImage);
-    cout << "Color: " << colorID << endl;
+    Mat d = runOnImage(srcImage);
+    namedWindow("d image",CV_WINDOW_AUTOSIZE);
+    imshow("d image",d);
     waitKey(0);
 
     return 0;
