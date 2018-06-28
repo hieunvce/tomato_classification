@@ -282,7 +282,7 @@ Mat runOnImage(Mat srcImage){
  * @param writeVideo
  * @return
  */
-int runOnCamera(VideoCapture camera, int writeVideo){
+int runOnCamera(VideoCapture camera){
     if (!camera.isOpened()){
         cout << "Error opening video/camera!" << endl;
         return -1;
@@ -292,34 +292,20 @@ int runOnCamera(VideoCapture camera, int writeVideo){
     int frame_width = camera.get(CV_CAP_PROP_FRAME_WIDTH);
     int frame_height = camera.get(CV_CAP_PROP_FRAME_HEIGHT);
 
-    if (writeVideo==1) {
-        VideoWriter video("outcpp.avi", CV_FOURCC('M', 'J', 'P', 'G'), 10, Size(frame_width, frame_height));
-        while (1) {
-            Mat frame;
-            camera >> frame;
-            if (frame.empty())
-                break;
-            Mat outFrame = runOnImage(frame);
-            video.write(outFrame);
-            char c = (char)waitKey(1);
-            if( c == 27 )
-                break;
-        }
-        camera.release();
-        video.release();
-    } else {
-        while (1) {
-            Mat frame;
-            camera >> frame;
-            if (frame.empty())
-                break;
-            Mat outFrame = runOnImage(frame);
-            imshow("On Camera", outFrame);
-            char c = (char)waitKey(40);
-            if( c == 27 )
-                break;
-        }
-        camera.release();
+    VideoWriter video("outcpp.avi", CV_FOURCC('M', 'J', 'P', 'G'), 10, Size(frame_width, frame_height));
+    while (1) {
+        Mat frame;
+        camera >> frame;
+        if (frame.empty())
+            break;
+        Mat outFrame = runOnImage(frame);
+        video.write(outFrame);
+        imshow("On Camera", outFrame);
+        char c = (char) waitKey(40);
+        if (c == 27)
+            break;
     }
+    camera.release();
+    video.release();
     return 0;
 }

@@ -25,6 +25,6 @@ int countBadPixel(Mat LabImage, Mat maskImage);
 STATUS gradeTomato(Color colorID, int nOfBadPixels);
 void showInfo(Size2i sizeOfTomato, STATUS grade);
 Mat runOnImage(Mat srcImage);
-int runOnCamera(VideoCapture camera, int writeVideo);
+int runOnCamera(VideoCapture camera);
 
 #endif //TOMATOCLASSIFICATION_FUNCTION_H
