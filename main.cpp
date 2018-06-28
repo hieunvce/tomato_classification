@@ -10,37 +10,18 @@ vector<Vec3b> setColor={Vec3b(0,0,255),Vec3b(0,255,255),
                         Vec3b(0,255,0),Vec3b(255,255,255)};
 
 int main(int argc, char** argv) {
-    /*VideoCapture camera("clip.mp4");//pass o to open webcame
-    if (!camera.isOpened()){
-        cout << "Error opening video/camera!" << endl;
-        return -1;
-    }
-
-    // Default resolution of the frame is obtained.The default resolution is system dependent.
-    int frame_width = camera.get(CV_CAP_PROP_FRAME_WIDTH);
-    int frame_height = camera.get(CV_CAP_PROP_FRAME_HEIGHT);
-
-    // Define the codec and create VideoWriter object.The output is stored in 'outcpp.avi' file.
-    VideoWriter video("outcpp.avi",CV_FOURCC('M','J','P','G'),10, Size(frame_width,frame_height));
-    while (1){
-        Mat frame;
-        camera >> frame;
-        if (frame.empty())
-            break;
-        Mat outFrame=runOnImage(frame);
-        video.write(outFrame);
-    }
-    camera.release();
-    video.release();
+    VideoCapture camera("clips/5s.mp4");//pass 0 to open webcame
+    int ok = runOnCamera(camera,1);
     destroyAllWindows();
-    */
-    Mat srcImage=imread("images/samples/1.jpg",CV_LOAD_IMAGE_COLOR);
+
+    /*Mat srcImage=imread("images/samples/1.jpg",CV_LOAD_IMAGE_COLOR);
     Size standardSize(500,500);
     resize(srcImage,srcImage,standardSize);
     Mat d = runOnImage(srcImage);
     namedWindow("d image",CV_WINDOW_AUTOSIZE);
     imshow("d image",d);
     waitKey(0);
+     */
 
     return 0;
 }

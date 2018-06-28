@@ -5,65 +5,21 @@
 #include "function.h"
 
 #define MIN_NUMBER_PIXEL 20
-/**
- * findColor: Find main color of a tomato.
- * We count number of RED pixel, YELLOW pixel, GREEN pixel
- * then compare to find out main color.
- * Return: enum Color
- * @param LabImage
- * @return
- */
-Color findColor(Mat LabImage){
-    assert(LabImage.channels() == 3);
-
-    int countRed=0;
-    int countYellow=0;
-    int countGreen=0;
-
-    /**<Count number of pixel for each color*/
-    for (int i=0;i<LabImage.rows;++i) {
-        const uchar *lab_data = LabImage.ptr<uchar>(i);
-        for (int j = 0; j < LabImage.cols; ++j) {
-            int l = *lab_data++;
-            l=l*100/255;
-            int a = *lab_data++-128;
-            int b = *lab_data++-128;
-
-            if (isRed(l,a,b))
-                countRed++;
-            else if (isYellow(l,a,b))
-                countYellow++;
-            else if (isGreen(l,a,b))
-                countGreen++;
-        }
-    }
-    //cout << countRed << ", " << countYellow << ", " << countGreen << endl;
-    /**<Compare and return main color*/
-    if (countRed >= MIN_NUMBER_PIXEL || countYellow >= MIN_NUMBER_PIXEL || countGreen >= MIN_NUMBER_PIXEL) {
-        if (countRed >= countYellow && countRed >= countGreen) {
-            return RED;
-        } else if (countYellow >= countRed && countYellow >= countGreen) {
-            return YELLOW;
-        } else {
-            return GREEN;
-        }
-    } else {
-        return OTHER;
-    }
-}
 
 /**
- * segmentImage: Segment image by color
- * Go through each pixel. If pixel's color is the same with color ID, it's value
- * at return image is 1,otherwise is 0.
- * Return: Mat
+ * Segment LabImage  and find main color of tomato, return at colorID
+ * Return: void
+ *
  * @param LabImage
- * @param colorID
- * @return
+ * @param segImage: Result of segmentation process
+ * @param colorID: Main color of tomato
  */
-Mat segmentImage(Mat LabImage, Color colorID){
+void SegmentImage(Mat LabImage, Mat &segImage, Color &colorID){
     assert(LabImage.channels() == 3);
-    Mat segImage(LabImage.rows,LabImage.cols,CV_8UC3);
+
+    int countRedPixel=0;
+    int countYellowPixel=0;
+    int countGreenPixel=0;
 
     /**> Begin segmentation process */
     for (int i=0;i<LabImage.rows;++i) {
@@ -75,25 +31,32 @@ Mat segmentImage(Mat LabImage, Color colorID){
             int a = *lab_data++-128;
             int b = *lab_data++-128;
 
-            if (color(l,a, b) == colorID) {
-                *seg_data++ = 255;
-                *seg_data++ = 255;
-                *seg_data++ = 255;
-            } else {
-                *seg_data++ = 0;
-                *seg_data++ = 0;
-                *seg_data++ = 0;
+            Color pixelColor=color(l,a,b);
+            switch (pixelColor){
+                case RED:
+                    countRedPixel++;
+                case YELLOW:
+                    countYellowPixel++;
+                case GREEN:
+                    countGreenPixel++;
+                    *seg_data++=255;
+                    break;
+                default:
+                    *seg_data++=0;
             }
         }
     }
 
-    int morph_size=2;
-    Mat kernel = getStructuringElement(2,Size(2*morph_size + 1, 2*morph_size+1),Point(morph_size,morph_size));
-    morphologyEx(segImage,segImage,MORPH_CLOSE,kernel);
-    morphologyEx(segImage,segImage,MORPH_OPEN,kernel);
-    morphologyEx(segImage,segImage,MORPH_CLOSE,kernel);
-
-    return segImage;
+    if (countRedPixel >= MIN_NUMBER_PIXEL || countYellowPixel >= MIN_NUMBER_PIXEL || countGreenPixel >= MIN_NUMBER_PIXEL) {
+        if (countRedPixel >= countYellowPixel && countRedPixel >= countGreenPixel) {
+            colorID=RED;
+        } else if (countYellowPixel >= countRedPixel && countYellowPixel >= countGreenPixel) {
+            colorID=YELLOW;
+        } else {
+            colorID=GREEN;
+        }
+    } else
+        colorID=OTHER;
 }
 
 /**
@@ -104,11 +67,8 @@ Mat segmentImage(Mat LabImage, Color colorID){
  * @return
  */
 vector<Point> detectROI(Mat segImage){
-    // Find edge using Canny algorithm
-    Mat edgeImage,kernel;
-    Canny(segImage, edgeImage, 0, 255, 3);
 
-    //Find contour base on edge
+    //Find contour base on segImage
     vector<vector<Point> > contours;
     vector<Vec4i> hierarchy;
     findContours(segImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
@@ -119,26 +79,23 @@ vector<Point> detectROI(Mat segImage){
         exit(-1);
     }
 
-    //Convexthull contour
-    vector<vector<Point> >hull(contours.size());
-    for (size_t i=0;i<contours.size();i++)
-    {
-        convexHull(contours[i],hull[i],false);
-    }
-
     // Find largest Contour => is Tomato
     vector<Point> largestContour;
-    float maxContourArea=contourArea(hull[0]);
-    largestContour=hull[0];
-    for (int i=0;i<hull.size();i++) {
-        float area = contourArea(hull[i]);
+    float maxContourArea=contourArea(contours[0]);
+    largestContour=contours[0];
+    for (int i=0;i<contours.size();i++) {
+        float area = contourArea(contours[i]);
         if (area > maxContourArea) {
             maxContourArea = area;
-            largestContour = hull[i];
+            largestContour = contours[i];
         }
     }
 
-    return largestContour;
+    //Convexthull contour
+    vector<Point> ROI;
+    convexHull(largestContour,ROI);
+
+    return ROI;
 }
 
 /**
@@ -213,6 +170,8 @@ int countBadPixel(Mat LabImage, Mat maskImage) {
  * @return
  */
 STATUS gradeTomato(Color colorID, int nOfBadPixels){
+    cout << " BAD PIXELS: " << nOfBadPixels << "\t|";
+
     int badTomato = 0;
     if (nOfBadPixels > MAX_BAD_PIXEL)
         badTomato = 1;
@@ -243,28 +202,37 @@ STATUS gradeTomato(Color colorID, int nOfBadPixels){
  * @param sizeOfTomato
  * @param nOfBadPixels
  */
-void showInfo(Color tomatoColor, Size2i sizeOfTomato, int nOfBadPixels){
-    switch (tomatoColor) {
-        case RED:
-            cout << "RED TOMATO \t|";
+void showInfo(Size2i sizeOfTomato, STATUS grade){
+    switch (grade) {
+        case RED_BAD:
+            cout << "RED BAD \t|";
             break;
-        case YELLOW:
-            cout << "YELLOW TOMATO \t|";
+        case RED_NORMAL:
+            cout << "RED NORMAL \t|";
             break;
-        case GREEN:
-            cout << "GREEN TOMATO \t|";
+        case YELLOW_BAD:
+            cout << "YELLOW BAD \t|";
             break;
+        case YELLOW_NORMAL:
+            cout << "YELLOW NORMAL \t|";
+            break;
+        case GREEN_BAD:
+            cout << "GREEN BAD \t|";
+            break;
+        case GREEN_NORMAL:
+            cout << "GREEN NORMAL \t|";
+            break;
+        default:
+            cout << "NO TOMATO \t|";
     }
 
-    cout << " SIZE: " << sizeOfTomato.height << " x " << sizeOfTomato.width << "\t|";
-    cout << " BAD PIXELS: " << nOfBadPixels << endl;
-
+    cout << " SIZE: " << sizeOfTomato.height << " x " << sizeOfTomato.width << endl;
 }
 
 /**
  * runOnImage: Run all function on an image
  * -----------------------------------------------------------------------------
- * findColor -> segmentImage -> detecROI -> calculateSize
+ * segmentImage -> detecROI -> calculateSize
  * -> createMask -> countBadPixel -> gradeTomato
  * -----------------------------------------------------------------------------
  * Return: grade of tomato or status of function
@@ -277,8 +245,7 @@ Mat runOnImage(Mat srcImage){
         cvtColor(srcImage, LabImage, COLOR_BGR2Lab);
         Mat segImage(srcImage.rows, srcImage.cols, CV_8U);
         Color colorID;
-        SegmentImagev2(LabImage,segImage,colorID);
-        imshow("seg image",segImage);
+        SegmentImage(LabImage,segImage,colorID);
         if (colorID != OTHER) {
             vector<Point> ROI = {Point(0, 0)};
             ROI = detectROI(segImage);
@@ -286,14 +253,13 @@ Mat runOnImage(Mat srcImage){
             Size2i tomatoSize;
             tomatoSize = calculateSize(ROI);
 
-            Size sizeOfMask;
-            sizeOfMask.width = srcImage.cols;
-            sizeOfMask.height = srcImage.rows;
+            Size sizeOfMask(srcImage.cols,srcImage.rows);
             Mat maskImage = createMask(sizeOfMask, ROI);
 
             int badPixels = 0;
             badPixels = countBadPixel(LabImage, maskImage);
-            //showInfo(colorID, tomatoSize, badPixels);
+            STATUS grade=gradeTomato(colorID, badPixels);
+            showInfo(tomatoSize,grade);
             Scalar black_color = Scalar(0, 0, 0);
             polylines(srcImage, ROI, true, black_color, 2, 8);
             return srcImage;
@@ -309,47 +275,51 @@ Mat runOnImage(Mat srcImage){
     }
 }
 
-void SegmentImagev2(Mat LabImage, Mat &segImage, Color &colorID){
-    assert(LabImage.channels() == 3);
-
-    int countRedPixel=0;
-    int countYellowPixel=0;
-    int countGreenPixel=0;
-
-    /**> Begin segmentation process */
-    for (int i=0;i<LabImage.rows;++i) {
-        const uchar *lab_data = LabImage.ptr<uchar>(i);
-        uchar *seg_data = segImage.ptr<uchar>(i);
-        for (int j = 0; j < LabImage.cols; ++j) {
-            int l = *lab_data++;
-            l=l*100/255;
-            int a = *lab_data++-128;
-            int b = *lab_data++-128;
-
-            Color pixelColor=color(l,a,b);
-            switch (pixelColor){
-                case RED:
-                    countRedPixel++;
-                case YELLOW:
-                    countYellowPixel++;
-                case GREEN:
-                    countGreenPixel++;
-                    *seg_data++=255;
-                    break;
-                default:
-                    *seg_data++=0;
-            }
-        }
+/**
+ * Run program on camera or a video
+ * To write video, pass writeVideo=1
+ * @param camera
+ * @param writeVideo
+ * @return
+ */
+int runOnCamera(VideoCapture camera, int writeVideo){
+    if (!camera.isOpened()){
+        cout << "Error opening video/camera!" << endl;
+        return -1;
     }
 
-    if (countRedPixel >= MIN_NUMBER_PIXEL || countYellowPixel >= MIN_NUMBER_PIXEL || countGreenPixel >= MIN_NUMBER_PIXEL) {
-        if (countRedPixel >= countYellowPixel && countRedPixel >= countGreenPixel) {
-            colorID=RED;
-        } else if (countYellowPixel >= countRedPixel && countYellowPixel >= countGreenPixel) {
-            colorID=YELLOW;
-        } else {
-            colorID=GREEN;
+    // Default resolution of the frame is obtained.The default resolution is system dependent.
+    int frame_width = camera.get(CV_CAP_PROP_FRAME_WIDTH);
+    int frame_height = camera.get(CV_CAP_PROP_FRAME_HEIGHT);
+
+    if (writeVideo==1) {
+        VideoWriter video("outcpp.avi", CV_FOURCC('M', 'J', 'P', 'G'), 10, Size(frame_width, frame_height));
+        while (1) {
+            Mat frame;
+            camera >> frame;
+            if (frame.empty())
+                break;
+            Mat outFrame = runOnImage(frame);
+            video.write(outFrame);
+            char c = (char)waitKey(1);
+            if( c == 27 )
+                break;
         }
-    } else
-        colorID=OTHER;
+        camera.release();
+        video.release();
+    } else {
+        while (1) {
+            Mat frame;
+            camera >> frame;
+            if (frame.empty())
+                break;
+            Mat outFrame = runOnImage(frame);
+            imshow("On Camera", outFrame);
+            char c = (char)waitKey(40);
+            if( c == 27 )
+                break;
+        }
+        camera.release();
+    }
+    return 0;
 }
