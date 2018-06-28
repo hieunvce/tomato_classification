@@ -33,6 +33,8 @@ colorProfile.h
 /home/hieunguyen/Projects/tomato_classification/main.cpp
 iostream
 -
+string.h
+-
 opencv2/opencv.hpp
 -
 colorProfile.h
