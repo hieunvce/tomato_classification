@@ -246,6 +246,7 @@ Mat runOnImage(Mat srcImage){
         Mat segImage(srcImage.rows, srcImage.cols, CV_8U);
         Color colorID;
         SegmentImage(LabImage,segImage,colorID);
+        imshow("segmented",segImage);
         if (colorID != OTHER) {
             vector<Point> ROI = {Point(0, 0)};
             ROI = detectROI(segImage);
@@ -255,13 +256,19 @@ Mat runOnImage(Mat srcImage){
 
             Size sizeOfMask(srcImage.cols,srcImage.rows);
             Mat maskImage = createMask(sizeOfMask, ROI);
-
+            imshow("mask",maskImage);
             int badPixels = 0;
             badPixels = countBadPixel(LabImage, maskImage);
             STATUS grade=gradeTomato(colorID, badPixels);
             showInfo(tomatoSize,grade);
             Scalar black_color = Scalar(0, 0, 0);
             polylines(srcImage, ROI, true, black_color, 2, 8);
+
+            RotatedRect rec=fitEllipse(ROI);
+            RotatedRect rec2=minAreaRect(ROI);
+
+            ellipse(srcImage,rec,black_color,2,8);
+
             return srcImage;
         } else {
             cout << "Skipped because of 0 tomato detected..." << endl;

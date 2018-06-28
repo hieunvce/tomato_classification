@@ -46,9 +46,10 @@ int main(int argc, char** argv) {
         imshow("d image",d);
         waitKey(0);
     }*/
-    Mat srcImage=imread("images/2.jpg");
+    Mat srcImage=imread("images/1.jpg");
     Size standardSize(500,500);
     resize(srcImage,srcImage,standardSize);
+    imshow("source image",srcImage);
     Mat d = runOnImage(srcImage);
     namedWindow("d image",CV_WINDOW_AUTOSIZE);
     imshow("d image",d);
