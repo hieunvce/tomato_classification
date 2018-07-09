@@ -24,7 +24,6 @@ Mat createMask(Size sizeOfMask, vector<Point> ROI);
 int countBadPixel(Mat LabImage, Mat maskImage);
 STATUS gradeTomato(Color colorID, int nOfBadPixels);
 void showInfo(Size2i sizeOfTomato, STATUS grade);
-Mat runOnImage(Mat srcImage);
-int runOnCamera(VideoCapture camera);
+string textGrade(STATUS grade);
 
 #endif //TOMATOCLASSIFICATION_FUNCTION_H

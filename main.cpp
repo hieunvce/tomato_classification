@@ -2,7 +2,7 @@
 #include <string.h>
 #include <opencv2/opencv.hpp>
 #include "colorProfile.h"
-#include "function.h"
+#include "runProgram.h"
 
 using namespace std;
 using namespace cv;
@@ -11,48 +11,23 @@ vector<Vec3b> setColor={Vec3b(0,0,255),Vec3b(0,255,255),
                         Vec3b(0,255,0),Vec3b(255,255,255)};
 
 int main(int argc, char** argv) {
-    /*int runOnDevice=0;
-    VideoCapture camera(0);
-    Mat srcImage;
-    if (argc==2 && !strcmp(argv[1],"--camera")) {
-        runOnDevice = 1;
-        VideoCapture camera(argv[2]);
-    }
-    else if (argc==2 && !strcmp(argv[1],"--video")) {
-        runOnDevice = 2;
-        VideoCapture camera(argv[2]);
-    }
-    else if (argc==2 && !strcmp(argv[1],"--image")) {
-        runOnDevice = 3;
-        srcImage=imread(argv[2]);
-    } else {
-        cout << "Usage:" << endl;
-        cout << "\t--camera <cameraID>: Run on camera with <cameraID> (cameraID is integer). If <cameraID>=0: Run on webcam" << endl;
-        cout << "\t--video <videoPath>: Run on video at <videoPath>" << endl;
-        cout << "\t--image <imagePath>: Run on image at <imagePath>" << endl;
-        cout << endl;
-        cout << "Default run on Webcame... ESC to exit." << endl;
-    }
+    Mat srcImage=imread(argv[1]);
+    Mat LabImage;
+    cvtColor(srcImage,LabImage,CV_BGR2Lab);
+    //Mat result = runOnImage(srcImage);
+    //imshow("result",result);
 
-
-    if (runOnDevice < 3) {
-        int ok = runOnCamera(camera);
-        destroyAllWindows();
-    } else if (runOnDevice==3){
-        Size standardSize(500,500);
-        resize(srcImage,srcImage,standardSize);
-        Mat d = runOnImage(srcImage);
-        namedWindow("d image",CV_WINDOW_AUTOSIZE);
-        imshow("d image",d);
-        waitKey(0);
-    }*/
-    Mat srcImage=imread("images/1.jpg");
-    Size standardSize(500,500);
-    resize(srcImage,srcImage,standardSize);
-    imshow("source image",srcImage);
-    Mat d = runOnImage(srcImage);
-    namedWindow("d image",CV_WINDOW_AUTOSIZE);
-    imshow("d image",d);
-    waitKey(0);
+    /**> Begin segmentation process */
+    for (int i=0;i<LabImage.rows;++i) {
+        const uchar *lab_data = LabImage.ptr<uchar>(i);
+        for (int j = 0; j < LabImage.cols; ++j) {
+            int l = *lab_data++;
+            l = l * 100 / 255;
+            int a = *lab_data++ - 128;
+            int b = *lab_data++ - 128;
+            cout << l << "\t" << a << "\t"<< b << endl;
+        }
+    }
+            //waitKey(0);
     return 0;
 }

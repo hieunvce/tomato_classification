@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -39,6 +39,14 @@ opencv2/opencv.hpp
 -
 colorProfile.h
 /home/hieunguyen/Projects/tomato_classification/colorProfile.h
+runProgram.h
+/home/hieunguyen/Projects/tomato_classification/runProgram.h
+
+/home/hieunguyen/Projects/tomato_classification/runProgram.cpp
+runProgram.h
+/home/hieunguyen/Projects/tomato_classification/runProgram.h
+
+/home/hieunguyen/Projects/tomato_classification/runProgram.h
 function.h
 /home/hieunguyen/Projects/tomato_classification/function.h
 

@@ -7,6 +7,6 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(OpenCV REQUIRED)
 
-add_executable(${PROJECT_NAME} main.cpp colorProfile.h colorProfile.cpp function.h function.cpp)
+add_executable(${PROJECT_NAME} main.cpp colorProfile.h colorProfile.cpp function.h function.cpp runProgram.cpp runProgram.h)
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
