@@ -11,13 +11,19 @@ vector<Vec3b> setColor={Vec3b(0,0,255),Vec3b(0,255,255),
                         Vec3b(0,255,0),Vec3b(255,255,255)};
 
 int main(int argc, char** argv) {
+    setUseOptimized(true);
+    long double prevCount, timeExe;
+    prevCount=getTickCount()*1.0000;
     Mat srcImage=imread(argv[1]);
     Mat LabImage;
     cvtColor(srcImage,LabImage,CV_BGR2Lab);
-    //Mat result = runOnImage(srcImage);
-    //imshow("result",result);
+    Mat result = runOnImage(srcImage);
+    namedWindow("result",WINDOW_NORMAL);
+    imshow("result",result);
+    timeExe=(getTickCount()*1.0000-prevCount)/(getTickFrequency()*1.0000);
+    cout << "Exe time: "  << timeExe << endl;
 
-    /**> Begin segmentation process */
+    /**> Begin segmentation process
     for (int i=0;i<LabImage.rows;++i) {
         const uchar *lab_data = LabImage.ptr<uchar>(i);
         for (int j = 0; j < LabImage.cols; ++j) {
@@ -27,7 +33,7 @@ int main(int argc, char** argv) {
             int b = *lab_data++ - 128;
             cout << l << "\t" << a << "\t"<< b << endl;
         }
-    }
-            //waitKey(0);
+    }*/
+    waitKey(0);
     return 0;
 }

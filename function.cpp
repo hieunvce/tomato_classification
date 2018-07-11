@@ -1,19 +1,12 @@
-//
-// Created by hieunguyen on 6/14/18.
-//
+
 
 #include "function.h"
+using namespace std;
+using namespace cv;
 
 #define MIN_NUMBER_PIXEL 20
 
-/**
- * Segment LabImage  and find main color of tomato, return at colorID
- * Return: void
- *
- * @param LabImage
- * @param segImage: Result of segmentation process
- * @param colorID: Main color of tomato
- */
+
 void SegmentImage(Mat LabImage, Mat &segImage, Color &colorID){
     assert(LabImage.channels() == 3);
 
@@ -62,13 +55,7 @@ void SegmentImage(Mat LabImage, Mat &segImage, Color &colorID){
         colorID=OTHER;
 }
 
-/**
- * detectROI: Detect ROI which have tomato in image
- * It returns a contour is the ROI.
- * Return vector<Point>
- * @param segImage
- * @return
- */
+
 vector<Point> detectROI(Mat segImage){
 
     //Find contour base on segImage
@@ -101,12 +88,6 @@ vector<Point> detectROI(Mat segImage){
     return ROI;
 }
 
-/**
- * calculateSize: calculate size of tomato (size of ROI)
- * Print size to console
- * Return: Size2i
- * @param ROI
- */
 Size2i calculateSize(vector<Point> ROI){
     //Fit an rotated rectangle to ROI
     RotatedRect boundingBox;
@@ -118,13 +99,6 @@ Size2i calculateSize(vector<Point> ROI){
     return axes;
 }
 
-/**
- * createMask: Create a mask image that fill ROI with 255,255,255
- * Return: Mat image
- * @param sizeOfMask
- * @param ROI
- * @return
- */
 Mat createMask(Size sizeOfMask, vector<Point> ROI){
     Mat mask=Mat::zeros(sizeOfMask,CV_8UC3);
     vector<vector<Point> > ROI_Array;
@@ -135,16 +109,7 @@ Mat createMask(Size sizeOfMask, vector<Point> ROI){
     return mask;
 }
 
-/**
- * countBadPixel: Count number of bad pixels on tomato
- * + Get LabImage[pixel]
- * + If (maskImage[pixel]==1 && color[pixel]=OTHER) => badSegImage[pixel]=1, countBadPixel++, else =0
- * + Return: int numberOfBadPixels
- * + In future:
- * +            + Find contours of badSegImage
- * +            + Return: vector<vector<Point> > contains Bad contours
- * @return
- */
+
 int countBadPixel(Mat LabImage, Mat maskImage) {
     cvtColor(maskImage, maskImage, COLOR_BGR2GRAY);
     int numberOfBadPixel = 0;
@@ -163,14 +128,6 @@ int countBadPixel(Mat LabImage, Mat maskImage) {
     return numberOfBadPixel;
 }
 
-/**
- * gradeTomato: Grade Tomato base on color and number of bad pixels
- * if (number of pixel > MAX_BAD_PIXEL) then tomato is bad.
- * Return: STATUS is grade of tomato
- * @param colorID
- * @param nOfBadPixels
- * @return
- */
 STATUS gradeTomato(Color colorID, int nOfBadPixels){
     cout << " BAD PIXELS: " << nOfBadPixels << "\t|";
 
@@ -198,12 +155,6 @@ STATUS gradeTomato(Color colorID, int nOfBadPixels){
     }
 }
 
-/**
- * showInfo: Print to console info about tomato like color, size, number of bad pixels
- * @param tomatoColor
- * @param sizeOfTomato
- * @param nOfBadPixels
- */
 void showInfo(Size2i sizeOfTomato, STATUS grade){
     switch (grade) {
         case RED_BAD:

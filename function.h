@@ -5,9 +5,6 @@
 #include <iostream>
 #include "colorProfile.h"
 
-using namespace std;
-using namespace cv;
-
 enum STATUS{ FAIL=-1, SKIP_SUCCESS=0,
     RED_NORMAL, RED_BAD, YELLOW_NORMAL, YELLOW_BAD, GREEN_NORMAL, GREEN_BAD
 };

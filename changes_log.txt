@@ -1,0 +1,8 @@
+Change log:
+
+1. Use BGR instead of L*a*b:
+    + Do not have to convert BGR => L*a*b
+    + BGR use channel to determine color, L*a*b use artan to determine color
+    + Compare: use statistic
+2. Remove detecting bad tomato
+3. Optimize code
