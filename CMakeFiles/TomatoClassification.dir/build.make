@@ -34,10 +34,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/hieunguyen/Apps/clion-2018.1.3/bin/cmake/bin/cmake
+CMAKE_COMMAND = /usr/bin/cmake
 
 # The command to remove a file.
-RM = /home/hieunguyen/Apps/clion-2018.1.3/bin/cmake/bin/cmake -E remove -f
+RM = /usr/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -81,92 +81,14 @@ CMakeFiles/TomatoClassification.dir/main.cpp.o.provides: CMakeFiles/TomatoClassi
 CMakeFiles/TomatoClassification.dir/main.cpp.o.provides.build: CMakeFiles/TomatoClassification.dir/main.cpp.o
 
 
-CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o: CMakeFiles/TomatoClassification.dir/flags.make
-CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o: colorProfile.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hieunguyen/Projects/tomato_classification/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o -c /home/hieunguyen/Projects/tomato_classification/colorProfile.cpp
-
-CMakeFiles/TomatoClassification.dir/colorProfile.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TomatoClassification.dir/colorProfile.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hieunguyen/Projects/tomato_classification/colorProfile.cpp > CMakeFiles/TomatoClassification.dir/colorProfile.cpp.i
-
-CMakeFiles/TomatoClassification.dir/colorProfile.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TomatoClassification.dir/colorProfile.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hieunguyen/Projects/tomato_classification/colorProfile.cpp -o CMakeFiles/TomatoClassification.dir/colorProfile.cpp.s
-
-CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o.requires:
-
-.PHONY : CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o.requires
-
-CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o.provides: CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o.requires
-	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o.provides.build
-.PHONY : CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o.provides
-
-CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o.provides.build: CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o
-
-
-CMakeFiles/TomatoClassification.dir/function.cpp.o: CMakeFiles/TomatoClassification.dir/flags.make
-CMakeFiles/TomatoClassification.dir/function.cpp.o: function.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hieunguyen/Projects/tomato_classification/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/TomatoClassification.dir/function.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TomatoClassification.dir/function.cpp.o -c /home/hieunguyen/Projects/tomato_classification/function.cpp
-
-CMakeFiles/TomatoClassification.dir/function.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TomatoClassification.dir/function.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hieunguyen/Projects/tomato_classification/function.cpp > CMakeFiles/TomatoClassification.dir/function.cpp.i
-
-CMakeFiles/TomatoClassification.dir/function.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TomatoClassification.dir/function.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hieunguyen/Projects/tomato_classification/function.cpp -o CMakeFiles/TomatoClassification.dir/function.cpp.s
-
-CMakeFiles/TomatoClassification.dir/function.cpp.o.requires:
-
-.PHONY : CMakeFiles/TomatoClassification.dir/function.cpp.o.requires
-
-CMakeFiles/TomatoClassification.dir/function.cpp.o.provides: CMakeFiles/TomatoClassification.dir/function.cpp.o.requires
-	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/function.cpp.o.provides.build
-.PHONY : CMakeFiles/TomatoClassification.dir/function.cpp.o.provides
-
-CMakeFiles/TomatoClassification.dir/function.cpp.o.provides.build: CMakeFiles/TomatoClassification.dir/function.cpp.o
-
-
-CMakeFiles/TomatoClassification.dir/runProgram.cpp.o: CMakeFiles/TomatoClassification.dir/flags.make
-CMakeFiles/TomatoClassification.dir/runProgram.cpp.o: runProgram.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hieunguyen/Projects/tomato_classification/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/TomatoClassification.dir/runProgram.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TomatoClassification.dir/runProgram.cpp.o -c /home/hieunguyen/Projects/tomato_classification/runProgram.cpp
-
-CMakeFiles/TomatoClassification.dir/runProgram.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TomatoClassification.dir/runProgram.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/hieunguyen/Projects/tomato_classification/runProgram.cpp > CMakeFiles/TomatoClassification.dir/runProgram.cpp.i
-
-CMakeFiles/TomatoClassification.dir/runProgram.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TomatoClassification.dir/runProgram.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/hieunguyen/Projects/tomato_classification/runProgram.cpp -o CMakeFiles/TomatoClassification.dir/runProgram.cpp.s
-
-CMakeFiles/TomatoClassification.dir/runProgram.cpp.o.requires:
-
-.PHONY : CMakeFiles/TomatoClassification.dir/runProgram.cpp.o.requires
-
-CMakeFiles/TomatoClassification.dir/runProgram.cpp.o.provides: CMakeFiles/TomatoClassification.dir/runProgram.cpp.o.requires
-	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/runProgram.cpp.o.provides.build
-.PHONY : CMakeFiles/TomatoClassification.dir/runProgram.cpp.o.provides
-
-CMakeFiles/TomatoClassification.dir/runProgram.cpp.o.provides.build: CMakeFiles/TomatoClassification.dir/runProgram.cpp.o
-
-
 # Object files for target TomatoClassification
 TomatoClassification_OBJECTS = \
-"CMakeFiles/TomatoClassification.dir/main.cpp.o" \
-"CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o" \
-"CMakeFiles/TomatoClassification.dir/function.cpp.o" \
-"CMakeFiles/TomatoClassification.dir/runProgram.cpp.o"
+"CMakeFiles/TomatoClassification.dir/main.cpp.o"
 
 # External object files for target TomatoClassification
 TomatoClassification_EXTERNAL_OBJECTS =
 
 TomatoClassification: CMakeFiles/TomatoClassification.dir/main.cpp.o
-TomatoClassification: CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o
-TomatoClassification: CMakeFiles/TomatoClassification.dir/function.cpp.o
-TomatoClassification: CMakeFiles/TomatoClassification.dir/runProgram.cpp.o
 TomatoClassification: CMakeFiles/TomatoClassification.dir/build.make
 TomatoClassification: /usr/local/lib/libopencv_stitching.so.3.3.1
 TomatoClassification: /usr/local/lib/libopencv_superres.so.3.3.1
@@ -215,7 +137,7 @@ TomatoClassification: /usr/local/lib/libopencv_objdetect.so.3.3.1
 TomatoClassification: /usr/local/lib/libopencv_imgproc.so.3.3.1
 TomatoClassification: /usr/local/lib/libopencv_core.so.3.3.1
 TomatoClassification: CMakeFiles/TomatoClassification.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/hieunguyen/Projects/tomato_classification/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable TomatoClassification"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/hieunguyen/Projects/tomato_classification/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable TomatoClassification"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/TomatoClassification.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -224,9 +146,6 @@ CMakeFiles/TomatoClassification.dir/build: TomatoClassification
 .PHONY : CMakeFiles/TomatoClassification.dir/build
 
 CMakeFiles/TomatoClassification.dir/requires: CMakeFiles/TomatoClassification.dir/main.cpp.o.requires
-CMakeFiles/TomatoClassification.dir/requires: CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o.requires
-CMakeFiles/TomatoClassification.dir/requires: CMakeFiles/TomatoClassification.dir/function.cpp.o.requires
-CMakeFiles/TomatoClassification.dir/requires: CMakeFiles/TomatoClassification.dir/runProgram.cpp.o.requires
 
 .PHONY : CMakeFiles/TomatoClassification.dir/requires
 

@@ -74,25 +74,7 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/hieunguyen/Projects/tomato_classification/colorProfile.cpp">
-			<Option target="TomatoClassification"/>
-		</Unit>
-		<Unit filename="/home/hieunguyen/Projects/tomato_classification/colorProfile.h">
-			<Option target="TomatoClassification"/>
-		</Unit>
-		<Unit filename="/home/hieunguyen/Projects/tomato_classification/function.cpp">
-			<Option target="TomatoClassification"/>
-		</Unit>
-		<Unit filename="/home/hieunguyen/Projects/tomato_classification/function.h">
-			<Option target="TomatoClassification"/>
-		</Unit>
 		<Unit filename="/home/hieunguyen/Projects/tomato_classification/main.cpp">
-			<Option target="TomatoClassification"/>
-		</Unit>
-		<Unit filename="/home/hieunguyen/Projects/tomato_classification/runProgram.cpp">
-			<Option target="TomatoClassification"/>
-		</Unit>
-		<Unit filename="/home/hieunguyen/Projects/tomato_classification/runProgram.h">
 			<Option target="TomatoClassification"/>
 		</Unit>
 		<Unit filename="/home/hieunguyen/Projects/tomato_classification/CMakeLists.txt">

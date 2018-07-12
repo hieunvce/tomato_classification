@@ -6,3 +6,5 @@ Change log:
     + Compare: use statistic
 2. Remove detecting bad tomato
 3. Optimize code
+
+https://stackoverflow.com/questions/35226993/how-to-crop-away-convexity-defects

@@ -39,10 +39,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/hieunguyen/Apps/clion-2018.1.3/bin/cmake/bin/cmake
+CMAKE_COMMAND = /usr/bin/cmake
 
 # The command to remove a file.
-RM = /home/hieunguyen/Apps/clion-2018.1.3/bin/cmake/bin/cmake -E remove -f
+RM = /usr/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /home/hieunguyen/Projects/tomato_classification
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/hieunguyen/Apps/clion-2018.1.3/bin/cmake/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -70,7 +70,7 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/hieunguyen/Apps/clion-2018.1.3/bin/cmake/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -123,60 +123,6 @@ TomatoClassification/fast:
 	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/build
 .PHONY : TomatoClassification/fast
 
-colorProfile.o: colorProfile.cpp.o
-
-.PHONY : colorProfile.o
-
-# target to build an object file
-colorProfile.cpp.o:
-	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/colorProfile.cpp.o
-.PHONY : colorProfile.cpp.o
-
-colorProfile.i: colorProfile.cpp.i
-
-.PHONY : colorProfile.i
-
-# target to preprocess a source file
-colorProfile.cpp.i:
-	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/colorProfile.cpp.i
-.PHONY : colorProfile.cpp.i
-
-colorProfile.s: colorProfile.cpp.s
-
-.PHONY : colorProfile.s
-
-# target to generate assembly for a file
-colorProfile.cpp.s:
-	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/colorProfile.cpp.s
-.PHONY : colorProfile.cpp.s
-
-function.o: function.cpp.o
-
-.PHONY : function.o
-
-# target to build an object file
-function.cpp.o:
-	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/function.cpp.o
-.PHONY : function.cpp.o
-
-function.i: function.cpp.i
-
-.PHONY : function.i
-
-# target to preprocess a source file
-function.cpp.i:
-	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/function.cpp.i
-.PHONY : function.cpp.i
-
-function.s: function.cpp.s
-
-.PHONY : function.s
-
-# target to generate assembly for a file
-function.cpp.s:
-	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/function.cpp.s
-.PHONY : function.cpp.s
-
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -204,33 +150,6 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-runProgram.o: runProgram.cpp.o
-
-.PHONY : runProgram.o
-
-# target to build an object file
-runProgram.cpp.o:
-	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/runProgram.cpp.o
-.PHONY : runProgram.cpp.o
-
-runProgram.i: runProgram.cpp.i
-
-.PHONY : runProgram.i
-
-# target to preprocess a source file
-runProgram.cpp.i:
-	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/runProgram.cpp.i
-.PHONY : runProgram.cpp.i
-
-runProgram.s: runProgram.cpp.s
-
-.PHONY : runProgram.s
-
-# target to generate assembly for a file
-runProgram.cpp.s:
-	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/runProgram.cpp.s
-.PHONY : runProgram.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -238,20 +157,11 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... edit_cache"
 	@echo "... TomatoClassification"
-	@echo "... colorProfile.o"
-	@echo "... colorProfile.i"
-	@echo "... colorProfile.s"
-	@echo "... function.o"
-	@echo "... function.i"
-	@echo "... function.s"
+	@echo "... edit_cache"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... runProgram.o"
-	@echo "... runProgram.i"
-	@echo "... runProgram.s"
 .PHONY : help
 
 
