@@ -5,15 +5,17 @@
 using namespace std;
 using namespace cv;
 
-#define MIN_TOMATO_AREA 100
-#define THRESHOLD_VALUE 2830000
+#define MIN_TOMATO_AREA     100         //Minimum area of region to be a tomato
+#define THRESHOLD_VALUE     2830000     //HEX Value for background
+#define MIN_DEPTH           3           //If depth > MIN_DEPTH => will be removed
+#define MIN_DISTANCE        10000       //If 2 defects too far, they will be ignored
 
 int distanceBetween2Points(const Point &A, const Point &B) {
     return (A.x - B.x) * (A.x - B.x) + (A.y - B.y) * (A.y - B.y);
 }
 
-vector<Point> removeFromContour(const vector<Point> &contour, const vector<int> &defectsIndex) {
-    int minDistance = INT_MAX;
+vector<Point> removeFromContour(const vector<Point> &contour, const vector<int> &defectsIndex, int &minDistance) {
+    minDistance = INT_MAX;
     int startIndex, endIndex;
 
     // Find nearest defects
@@ -28,6 +30,8 @@ vector<Point> removeFromContour(const vector<Point> &contour, const vector<int> 
         }
     }
 
+    if (minDistance > MIN_DISTANCE)
+        return contour;
     // Check if intervals are swapped
     if (startIndex <= endIndex) {
         int len1 = endIndex - startIndex;
@@ -104,21 +108,43 @@ int main(int argc, char **argv) {
             convexHull(tomatoBoundary, convexHullIndex, false, false);
             vector<Vec4i> convexityDefectIndex;
             convexityDefects(tomatoBoundary, convexHullIndex, convexityDefectIndex);
+            int minDistance=INT_MAX;
 
             while (true) {
                 vector<int> defectsIndex;
                 for (const Vec4i &v:convexityDefectIndex) {
                     float depth = static_cast<float>(v[3]) / 256.f;
-                    if (depth > 2) { //firstly filter defects by depth
-                        // Defect found
+
+                    if (depth > MIN_DEPTH) {
                         defectsIndex.push_back(v[2]);
+
+//                        //------for debugging----------------------------------------
+//                        cout << "depth = " << depth << endl;
+//                        int startidx = v[0];
+//                        Point ptStart(tomatoBoundary[startidx]);
+//                        int endidx = v[1];
+//                        Point ptEnd(tomatoBoundary[endidx]);
+//                        int faridx = v[2];
+//                        Point ptFar(tomatoBoundary[faridx]);
+//
+//                        line(colorImage, ptStart, ptEnd, Scalar(255, 0, 0), 1);
+//                        line(colorImage, ptStart, ptFar, Scalar(0, 255, 0), 1);
+//                        line(colorImage, ptEnd, ptFar, Scalar(0, 0, 255), 1);
+//                        circle(colorImage, ptFar, 4, Scalar(127, 127, 255), 2);
+//                        //-----end debugging-----------------------------------------
+
                     }
                 }
-                if (defectsIndex.size() < 2) {
+
+                if (defectsIndex.size() < 2){
                     break;
                 }
                 // If I have more than 2 defects, remove the points between the two nearest defects
-                tomatoBoundary = removeFromContour(tomatoBoundary, defectsIndex);
+                tomatoBoundary = removeFromContour(tomatoBoundary, defectsIndex,minDistance);
+
+                if (minDistance >= MIN_DISTANCE) {
+                    break;
+                }
                 convexHull(tomatoBoundary, convexHullIndex, false, false);
                 convexityDefects(tomatoBoundary, convexHullIndex, convexityDefectIndex);
             }
@@ -144,6 +170,8 @@ int main(int argc, char **argv) {
         // Push tomatoBoundary to a vector to pass as argument to drawContours function
         cntArray.push_back(tomatoBoundary);
         drawContours(mask, cntArray, -1, (255), CV_FILLED);
+        //namedWindow("Mask Image", WINDOW_NORMAL);
+        //imshow("Mask Image", mask);
 
         int sumOfGreenValues = 0;
         int numberOfMaskPixel = 0;
@@ -166,8 +194,10 @@ int main(int argc, char **argv) {
     double executionTime = (getTickCount() * 1.00 - prevTickCount * 1.00) / (getTickFrequency() * 1.00);
     cout << "execution Time = " << executionTime << " s" << endl;
 
+    namedWindow("Color Image", WINDOW_NORMAL);
     imshow("Color Image", colorImage);
-    imshow("Threshold Image", thresholdImage);
+    //namedWindow("Threshold Image", WINDOW_NORMAL);
+    //imshow("Threshold Image", thresholdImage);
 
     waitKey(0);
     return 0;
