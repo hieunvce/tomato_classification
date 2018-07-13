@@ -14,10 +14,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e64d5ea-b6e6-4df6-a77a-bc10f1c78d1b" name="Default" comment="TomatoClassification Version 4.0:&#10;+ Execution Time: &lt; 0.03 s&#10;+ Fixed convexity defects problem.&#10;1. Find defects on contour&#10;2. If I find at least two defects, find the two closest defects&#10;3. Remove from the contour the points between the two closest defects&#10;4. Restart from 1 on the new contour&#10;+ Next: Refactor code...">
+    <list default="true" id="6e64d5ea-b6e6-4df6-a77a-bc10f1c78d1b" name="Default" comment="">
       <change afterPath="$PROJECT_DIR$/Documents/Compare removing noise method.docx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/image.png" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/image2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/image3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/image4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/image5.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeCache.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/Makefile.cmake" afterDir="false" />
@@ -333,12 +336,12 @@
       <workItem from="1531294406356" duration="2918000" />
       <workItem from="1531315094033" duration="1308000" />
       <workItem from="1531317756014" duration="5569000" />
-      <workItem from="1531358174620" duration="29902000" />
+      <workItem from="1531358174620" duration="30519000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="165744000" />
+    <option name="totallyTimeSpent" value="166361000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
