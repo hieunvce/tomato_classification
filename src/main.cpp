@@ -17,6 +17,5 @@ int main(int argc, char **argv) {
 
     double executionTime = (getTickCount() * 1.00 - prevTickCount * 1.00) / (getTickFrequency() * 1.00);
     cout << "execution Time = " << executionTime << " s" << endl;
-    waitKey(0);
     return 0;
 }
