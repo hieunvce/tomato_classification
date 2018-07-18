@@ -92,6 +92,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/hieunguyen/Projects/tomato_classification/include/function.h">
+			<Option target="TomatoClassification"/>
+		</Unit>
+		<Unit filename="/home/hieunguyen/Projects/tomato_classification/src/function.cpp">
+			<Option target="TomatoClassification"/>
+		</Unit>
 		<Unit filename="/home/hieunguyen/Projects/tomato_classification/src/main.cpp">
 			<Option target="TomatoClassification"/>
 		</Unit>

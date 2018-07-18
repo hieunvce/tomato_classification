@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/TomatoClassification.dir/src/function.cpp.o"
   "CMakeFiles/TomatoClassification.dir/src/main.cpp.o"
   "TomatoClassification.pdb"
   "TomatoClassification"

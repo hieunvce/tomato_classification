@@ -123,6 +123,33 @@ TomatoClassification/fast:
 	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/build
 .PHONY : TomatoClassification/fast
 
+src/function.o: src/function.cpp.o
+
+.PHONY : src/function.o
+
+# target to build an object file
+src/function.cpp.o:
+	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/src/function.cpp.o
+.PHONY : src/function.cpp.o
+
+src/function.i: src/function.cpp.i
+
+.PHONY : src/function.i
+
+# target to preprocess a source file
+src/function.cpp.i:
+	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/src/function.cpp.i
+.PHONY : src/function.cpp.i
+
+src/function.s: src/function.cpp.s
+
+.PHONY : src/function.s
+
+# target to generate assembly for a file
+src/function.cpp.s:
+	$(MAKE) -f CMakeFiles/TomatoClassification.dir/build.make CMakeFiles/TomatoClassification.dir/src/function.cpp.s
+.PHONY : src/function.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... TomatoClassification"
+	@echo "... src/function.o"
+	@echo "... src/function.i"
+	@echo "... src/function.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
