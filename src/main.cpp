@@ -16,7 +16,9 @@ int main(int argc, char **argv) {
     calculateSizeAndGValue(colorImage,tomatoSize,gValue);
 
     double executionTime = (getTickCount() * 1.00 - prevTickCount * 1.00) / (getTickFrequency() * 1.00);
-    cout << "execution Time = " << executionTime << " s" << endl;
-    waitKey(0);
+    cout << argv[1] << "\t" << tomatoSize.width << "\t" << tomatoSize.height << "\t" << gValue
+                                                                                     << "\t" << executionTime << endl;
+    imwrite(argv[1],colorImage);
+    //waitKey(0);
     return 0;
 }

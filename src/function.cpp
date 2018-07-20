@@ -59,7 +59,7 @@ vector<Point> removeFromContour(const vector<Point> &contour, const vector<int> 
     return contourAfterRemoving;
 }
 
-void calculateSizeAndGValue(const cv::Mat& ROI, cv::Size2i& tomatoSize, float& gValue){
+void calculateSizeAndGValue(cv::Mat& ROI, cv::Size2i& tomatoSize, float& gValue){
     Mat thresholdImage(ROI.size(), CV_8UC1);
     Mat gChannelImage(ROI.size(), CV_8UC1);
     for (int y = 0; y < ROI.rows; ++y) {
@@ -154,14 +154,14 @@ void calculateSizeAndGValue(const cv::Mat& ROI, cv::Size2i& tomatoSize, float& g
             tomatoSize.height = (int) boundingBox.size.height;
 
             // Draw bounding box
-            Mat boundaryImage=ROI.clone();
             Point2f rectPoints[4];
             boundingBox.points(rectPoints);
-            for (int i = 0; i < 4; i++)
-                line(boundaryImage, rectPoints[i], rectPoints[(i + 1) % 4], Scalar(255, 255, 255), 2, 8);
+            for (int i = 0; i < 4; i++){
+                line(ROI, rectPoints[i], rectPoints[(i + 1) % 4], Scalar(255, 255, 255), 2, 8);
+            }
             //namedWindow("Boundary Image", WINDOW_NORMAL);
             //imshow("Boundary Image", boundaryImage);
-            imwrite("../images/output/boundary.jpg",boundaryImage);
+            //imwrite("../images/output/boundary.jpg",boundaryImage);
         }
     }
 
@@ -173,7 +173,7 @@ void calculateSizeAndGValue(const cv::Mat& ROI, cv::Size2i& tomatoSize, float& g
         drawContours(mask, cntArray, -1, (255), CV_FILLED);
         //namedWindow("Mask Image", WINDOW_NORMAL);
         //imshow("Mask Image", mask);
-        imwrite("../images/output/mask.jpg",mask);
+        //imwrite("../images/output/mask.jpg",mask);
 
         int sumOfGreenValues = 0;
         int numberOfMaskPixel = 0;

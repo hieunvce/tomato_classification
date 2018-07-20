@@ -1,7 +1,7 @@
-FILES=test/*
+FILES=../images/tomatos/*
 for f in $FILES
 do
     echo "Processing $f file..."
-    ./TomatoClassification $f
+    ./TomatoClassification $f >> pc.txt
 done
 echo "Finished"
