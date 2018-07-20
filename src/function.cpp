@@ -114,22 +114,6 @@ void calculateSizeAndGValue(cv::Mat& ROI, cv::Size2i& tomatoSize, float& gValue)
 
                     if (depth > MIN_DEPTH) {
                         defectsIndex.push_back(v[2]);
-
-//                        //------for debugging----------------------------------------
-//                        cout << "depth = " << depth << endl;
-//                        int startidx = v[0];
-//                        Point ptStart(tomatoBoundary[startidx]);
-//                        int endidx = v[1];
-//                        Point ptEnd(tomatoBoundary[endidx]);
-//                        int faridx = v[2];
-//                        Point ptFar(tomatoBoundary[faridx]);
-//
-//                        line(ROI, ptStart, ptEnd, Scalar(255, 0, 0), 1);
-//                        line(ROI, ptStart, ptFar, Scalar(0, 255, 0), 1);
-//                        line(ROI, ptEnd, ptFar, Scalar(0, 0, 255), 1);
-//                        circle(ROI, ptFar, 4, Scalar(127, 127, 255), 2);
-//                        //-----end debugging-----------------------------------------
-
                     }
                 }
 
@@ -159,9 +143,6 @@ void calculateSizeAndGValue(cv::Mat& ROI, cv::Size2i& tomatoSize, float& gValue)
             for (int i = 0; i < 4; i++){
                 line(ROI, rectPoints[i], rectPoints[(i + 1) % 4], Scalar(255, 255, 255), 2, 8);
             }
-            //namedWindow("Boundary Image", WINDOW_NORMAL);
-            //imshow("Boundary Image", boundaryImage);
-            //imwrite("../images/output/boundary.jpg",boundaryImage);
         }
     }
 
@@ -171,9 +152,6 @@ void calculateSizeAndGValue(cv::Mat& ROI, cv::Size2i& tomatoSize, float& gValue)
         // Push tomatoBoundary to a vector to pass as argument to drawContours function
         cntArray.push_back(tomatoBoundary);
         drawContours(mask, cntArray, -1, (255), CV_FILLED);
-        //namedWindow("Mask Image", WINDOW_NORMAL);
-        //imshow("Mask Image", mask);
-        //imwrite("../images/output/mask.jpg",mask);
 
         int sumOfGreenValues = 0;
         int numberOfMaskPixel = 0;
