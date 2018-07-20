@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/hieunguyen/Projects/tomato_classification/src/function.cpp" "/home/hieunguyen/Projects/tomato_classification/build/CMakeFiles/TomatoClassification.dir/src/function.cpp.o"
-  "/home/hieunguyen/Projects/tomato_classification/src/main.cpp" "/home/hieunguyen/Projects/tomato_classification/build/CMakeFiles/TomatoClassification.dir/src/main.cpp.o"
+  "/home/pi/projects/tomato_classification/src/function.cpp" "/home/pi/projects/tomato_classification/build/CMakeFiles/TomatoClassification.dir/src/function.cpp.o"
+  "/home/pi/projects/tomato_classification/src/main.cpp" "/home/pi/projects/tomato_classification/build/CMakeFiles/TomatoClassification.dir/src/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
