@@ -20,6 +20,6 @@ int main(int argc, char **argv) {
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(t2-t1).count();
     cout << argv[1] << "\t" << tomatoSize.width << "\t" << tomatoSize.height << "\t" << gValue << "\t" << duration << endl;
-    //imwrite(argv[1],colorImage);
+    imwrite(argv[1],colorImage);
     return 0;
 }
