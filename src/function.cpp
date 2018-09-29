@@ -1,5 +1,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <vector>
+#include <algorithm>
 #include "function.h"
 
 using namespace std;
@@ -105,7 +107,7 @@ void calculateSizeAndGValue(cv::Mat& ROI, cv::Size2i& tomatoSize, float& gValue)
             convexHull(tomatoBoundary, convexHullIndex, false, false);
             vector<Vec4i> convexityDefectIndex;
             convexityDefects(tomatoBoundary, convexHullIndex, convexityDefectIndex);
-            int minDistance=INT_MAX;
+            int minDistance = INT_MAX;
 
             while (true) {
                 vector<int> defectsIndex;
@@ -117,11 +119,11 @@ void calculateSizeAndGValue(cv::Mat& ROI, cv::Size2i& tomatoSize, float& gValue)
                     }
                 }
 
-                if (defectsIndex.size() < 2){
+                if (defectsIndex.size() < 2) {
                     break;
                 }
                 // If I have more than 2 defects, remove the points between the two nearest defects
-                tomatoBoundary = removeFromContour(tomatoBoundary, defectsIndex,minDistance);
+                tomatoBoundary = removeFromContour(tomatoBoundary, defectsIndex, minDistance);
 
                 if (minDistance >= MIN_DISTANCE) {
                     break;
@@ -140,12 +142,13 @@ void calculateSizeAndGValue(cv::Mat& ROI, cv::Size2i& tomatoSize, float& gValue)
             // Draw bounding box
             Point2f rectPoints[4];
             boundingBox.points(rectPoints);
-            for (int i = 0; i < 4; i++){
+            for (int i = 0; i < 4; i++) {
                 line(ROI, rectPoints[i], rectPoints[(i + 1) % 4], Scalar(255, 255, 255), 2, 8);
+                line(thresholdImage,rectPoints[i], rectPoints[(i + 1) % 4], Scalar(0, 0, 0), 2, 8);
             }
         }
     }
-
+    imshow("threshold Image",thresholdImage);
     if (tomatoSize.area() != 0) {
         Mat mask = Mat::zeros(ROI.size(), CV_8UC1);
         vector<vector<Point> > cntArray;
