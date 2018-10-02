@@ -4,6 +4,7 @@
 #include <opencv2/opencv.hpp>
 #include "function.h"
 #include "utils.h"
+#include "svm.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -27,15 +28,18 @@ int main(int argc, char **argv) {
                 return -1;
             }
             Mat colorImage;
+            Mat ROI;
             Size2i tomatoSize;
             float gValue;
+            RotatedRect boundingBox;
             while (1) {
                 high_resolution_clock::time_point t1 = high_resolution_clock::now();
                 cap >> colorImage;
+                ROI=colorImage.clone();
                 if (colorImage.empty()) {
                     break;
                 }
-                calculateSizeAndGValue(colorImage, tomatoSize, gValue);
+                calculateSize(colorImage, tomatoSize, ROI);
                 high_resolution_clock::time_point t2 = high_resolution_clock::now();
                 auto duration = duration_cast<microseconds>(t2 - t1).count();
                 cout << duration / 1000000.f << endl;
@@ -48,14 +52,18 @@ int main(int argc, char **argv) {
         } else if (std::string(argv[1]) == "-i" || std::string(argv[1]) == "--image") {
             high_resolution_clock::time_point t1 = high_resolution_clock::now();
             Mat colorImage = imread(argv[2]);
+            Mat ROI=colorImage.clone();
+
             Size2i tomatoSize;
-            float gValue;
-            calculateSizeAndGValue(colorImage, tomatoSize, gValue);
+            calculateSize(colorImage, tomatoSize, ROI);
+            vector<int> feature(3,0);
+            feature = find3PeaksHistogram(ROI);
+            cout << "3 1:" << feature[0] << " 2:" << feature[1] << " 3:" << feature[2] << endl;
             high_resolution_clock::time_point t2 = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(t2 - t1).count();
-            cout << duration / 1000000.f << endl;
-
-            cout << colorImage.size() << endl;
+            double predictValue = predictColor(feature);
+            cout << "Predict value: " << predictValue << endl;
+            cout << "Execute time:" << duration / 1000000.f << endl;
             imshow("image",colorImage);
             waitKey(0);
         } else {

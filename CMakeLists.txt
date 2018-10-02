@@ -12,6 +12,8 @@ include_directories(include)
 #Find all *.cpp file in src/
 file(GLOB SOURCES "src/*.cpp")
 
-add_executable(${PROJECT_NAME} ${SOURCES} include/function.h src/function.cpp src/utils.cpp include/utils.h)
+add_executable(${PROJECT_NAME} ${SOURCES} include/function.h src/function.cpp
+        include/utils.h src/utils.cpp
+        include/svm.h src/svm.cpp)
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})

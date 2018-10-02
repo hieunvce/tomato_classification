@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include "function.h"
+#include "svm.h"
 
 using namespace std;
 using namespace cv;
@@ -11,6 +12,10 @@ using namespace cv;
 #define THRESHOLD_VALUE     2830000     //HEX Value for background
 #define MIN_DEPTH           3           //If depth > MIN_DEPTH => will be removed
 #define MIN_DISTANCE        10000       //If 2 defects too far, they will be ignored
+#define NUMBER_OF_ATTRIBUTE 3
+
+struct svm_model *model;
+struct svm_node *x;
 
 int distanceBetween2Points(const Point &A, const Point &B) {
     return (A.x - B.x) * (A.x - B.x) + (A.y - B.y) * (A.y - B.y);
@@ -61,19 +66,16 @@ vector<Point> removeFromContour(const vector<Point> &contour, const vector<int> 
     return contourAfterRemoving;
 }
 
-void calculateSizeAndGValue(cv::Mat& ROI, cv::Size2i& tomatoSize, float& gValue){
-    Mat thresholdImage(ROI.size(), CV_8UC1);
-    Mat gChannelImage(ROI.size(), CV_8UC1);
-    for (int y = 0; y < ROI.rows; ++y) {
-        const uchar *ROIData = ROI.ptr<uchar>(y);
+void calculateSize(cv::Mat& image, cv::Size2i& tomatoSize, cv::Mat& ROI){
+    Mat thresholdImage(image.size(), CV_8UC1);
+
+    for (int y = 0; y < image.rows; ++y) {
+        const uchar *ROIData = image.ptr<uchar>(y);
         auto *thresholdImageData = thresholdImage.ptr<uchar>(y);
-        auto *gChannelImageData = gChannelImage.ptr<uchar>(y);
-        for (int x = 0; x < ROI.cols; ++x) {
+        for (int x = 0; x < image.cols; ++x) {
             int b = *ROIData++;
             int g = *ROIData++;
             int r = *ROIData++;
-
-            *gChannelImageData++ = static_cast<uchar>(g);
 
             int hexValue = (r * 65536) + (g * 256) + b;
             if (hexValue < THRESHOLD_VALUE) {
@@ -83,7 +85,6 @@ void calculateSizeAndGValue(cv::Mat& ROI, cv::Size2i& tomatoSize, float& gValue)
             }
         }
     }
-
     vector<vector<Point> > contours;
     findContours(thresholdImage, contours, RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
     vector<Point> tomatoBoundary;
@@ -132,44 +133,94 @@ void calculateSizeAndGValue(cv::Mat& ROI, cv::Size2i& tomatoSize, float& gValue)
                 convexityDefects(tomatoBoundary, convexHullIndex, convexityDefectIndex);
             }
 
-
-            //------------------------------------------------------------------make
-            RotatedRect boundingBox;
+            // bounding Box
+            cv::RotatedRect boundingBox;
             boundingBox = minAreaRect(tomatoBoundary);
             tomatoSize.width = (int) boundingBox.size.width;
             tomatoSize.height = (int) boundingBox.size.height;
 
-            // Draw bounding box
+            // Draw bounding box, for debug only
             Point2f rectPoints[4];
             boundingBox.points(rectPoints);
             for (int i = 0; i < 4; i++) {
-                line(ROI, rectPoints[i], rectPoints[(i + 1) % 4], Scalar(255, 255, 255), 2, 8);
-                line(thresholdImage,rectPoints[i], rectPoints[(i + 1) % 4], Scalar(0, 0, 0), 2, 8);
+                line(image, rectPoints[i], rectPoints[(i + 1) % 4], Scalar(255, 255, 255), 2, 8);
             }
         }
     }
-    imshow("threshold Image",thresholdImage);
+
     if (tomatoSize.area() != 0) {
-        Mat mask = Mat::zeros(ROI.size(), CV_8UC1);
+        Mat mask = Mat::zeros(image.size(), CV_8UC1);
+
         vector<vector<Point> > cntArray;
         // Push tomatoBoundary to a vector to pass as argument to drawContours function
         cntArray.push_back(tomatoBoundary);
         drawContours(mask, cntArray, -1, (255), CV_FILLED);
+        //imshow("mask",mask);
 
-        int sumOfGreenValues = 0;
-        int numberOfMaskPixel = 0;
-        for (int y = 0; y < gChannelImage.rows; ++y) {
-            const uchar *gChannelImageData = gChannelImage.ptr<uchar>(y);
-            const uchar *maskImageData = mask.ptr<uchar>(y);
+        for (int y = 0; y < mask.rows; ++y) {
+            uchar *roi_data = ROI.ptr<uchar>(y);
+            const uchar *mask_data = mask.ptr<uchar>(y);
             for (int x = 0; x < ROI.cols; ++x) {
-                if (*maskImageData == 255) {
-                    sumOfGreenValues += *gChannelImageData;
-                    numberOfMaskPixel++;
+                //check if pixel outside mask
+                if (*mask_data != 255) {
+                    *roi_data=0;
+                    roi_data++;
+                    *roi_data=0;
+                    roi_data++;
+                    *roi_data=0;
+                    roi_data++;
+                } else {
+                    roi_data+=3;
                 }
-                maskImageData++;
-                gChannelImageData++;
+                mask_data++;
             }
         }
-        gValue = static_cast<float>(sumOfGreenValues * 1.00 / numberOfMaskPixel * 1.00);
+        //imshow("ROI",ROI);
+        //imwrite("a.jpg",ROI);
     }
+}
+std::vector<int> find3PeaksHistogram(cv::Mat& ROI){
+    int redArray[255]={0};
+    int greenArray[255]={0};
+    int blueArray[255]={0};
+    
+    for (int y=0;y<ROI.rows;++y){
+        const uchar *pixel_data = ROI.ptr<uchar>(y);
+        for (int x=0;x<ROI.cols;++x) {
+            int b = *pixel_data++;
+            int g = *pixel_data++;
+            int r = *pixel_data++;
+            if (r != 0 && g != 0 && b != 0) {
+                redArray[r] += 1;
+                greenArray[g] += 1;
+                blueArray[b] += 1;
+            }
+        }
+    }
+
+    vector<int> peak(3,0);
+
+    peak[0]=std::distance(redArray,std::max_element(redArray,redArray+255));
+    peak[1]=std::distance(greenArray,std::max_element(greenArray,greenArray+255));
+    peak[2]=std::distance(blueArray,std::max_element(blueArray,blueArray+255));
+
+    return peak;
+}
+double predictColor(vector<int> feature){
+    //feature[0]=red peak, feature[1]=green peak, feature[2]=blue peak
+    double predict_label;
+    if ((model=svm_load_model("tomato_classifier.model"))==0){
+        cout << "Can't open model file!" << endl;
+        exit(1);
+    }
+    x=(struct svm_node *)malloc((NUMBER_OF_ATTRIBUTE+1)*sizeof(struct svm_node));
+    x[0].index=1; x[0].value=feature[0];
+    x[1].index=2; x[1].value=feature[1];
+    x[2].index=3; x[2].value=feature[2];
+    x[3].index=-1; x[3].value=0;
+    //predict
+    predict_label = svm_predict(model,x);
+    svm_free_and_destroy_model(&model);
+    free(x);
+    return predict_label;
 }
