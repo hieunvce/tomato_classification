@@ -4,6 +4,10 @@
 
 #include "utils.h"
 #include <iostream>
+#include <opencv2/opencv.hpp>
+
+using namespace std;
+using namespace cv;
 
 void help(){
     std::cout << "Help:" << std::endl;
@@ -12,10 +16,7 @@ void help(){
     std::cout << "Run on video: ./TomatoClassification [-v | --video] [path to video]" << std::endl;
 }
 
-void printRotatedRectangle(const cv::RotatedRect& boundingBox){
-    cv::Point2f rectPoints[4];
-    boundingBox.points(rectPoints);
-    for (int i = 0; i < 4; i++) {
-        std::cout << "(" << rectPoints[i].x << ", " << rectPoints[i].y << ")" << std::endl;
-    }
+int distanceBetween2Points(const Point &A, const Point &B) {
+    return (A.x - B.x) * (A.x - B.x) + (A.y - B.y) * (A.y - B.y);
 }
+

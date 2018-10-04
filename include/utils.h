@@ -8,6 +8,7 @@
 #include <opencv2/core/types.hpp>
 
 void help();
-void printRotatedRectangle(const cv::RotatedRect& boundingBox);
+int distanceBetween2Points(const cv::Point &A, const cv::Point &B);
+
 
 #endif //TOMATOCLASSIFICATION_UTILS_H

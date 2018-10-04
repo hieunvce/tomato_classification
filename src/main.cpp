@@ -40,11 +40,15 @@ int main(int argc, char **argv) {
                     break;
                 }
                 calculateSize(colorImage, tomatoSize, ROI);
+                vector<int> feature(3,0);
+                feature = find3PeaksHistogram(ROI);
+                double predictValue = predictColor(feature);
                 high_resolution_clock::time_point t2 = high_resolution_clock::now();
                 auto duration = duration_cast<microseconds>(t2 - t1).count();
                 cout << duration / 1000000.f << endl;
-
-                cout << colorImage.size() << endl;
+                cout << "Predict value: " << predictValue << endl;
+                cout << "Execute time:" << duration / 1000000.f << endl;
+                imshow("image",colorImage);
                 if (waitKey(1) == 27)
                     break;
             }
@@ -53,19 +57,20 @@ int main(int argc, char **argv) {
             high_resolution_clock::time_point t1 = high_resolution_clock::now();
             Mat colorImage = imread(argv[2]);
             Mat ROI=colorImage.clone();
-
             Size2i tomatoSize;
             calculateSize(colorImage, tomatoSize, ROI);
             vector<int> feature(3,0);
             feature = find3PeaksHistogram(ROI);
-            cout << "3 1:" << feature[0] << " 2:" << feature[1] << " 3:" << feature[2] << endl;
+            double predictValue = predictColor(feature);
             high_resolution_clock::time_point t2 = high_resolution_clock::now();
             auto duration = duration_cast<microseconds>(t2 - t1).count();
-            double predictValue = predictColor(feature);
             cout << "Predict value: " << predictValue << endl;
             cout << "Execute time:" << duration / 1000000.f << endl;
+
             imshow("image",colorImage);
             waitKey(0);
+        } else if (std::string(argv[1]) == "-t" || std::string(argv[1]) == "--train") {
+            return trainColorModel(argv[2]);
         } else {
             help();
         }

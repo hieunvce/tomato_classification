@@ -1,9 +1,12 @@
 #include <iostream>
-#include <opencv2/opencv.hpp>
+#include <fstream>
 #include <vector>
 #include <algorithm>
+#include <opencv2/opencv.hpp>
+#include <dirent.h>
 #include "function.h"
 #include "svm.h"
+#include "utils.h"
 
 using namespace std;
 using namespace cv;
@@ -17,11 +20,7 @@ using namespace cv;
 struct svm_model *model;
 struct svm_node *x;
 
-int distanceBetween2Points(const Point &A, const Point &B) {
-    return (A.x - B.x) * (A.x - B.x) + (A.y - B.y) * (A.y - B.y);
-}
-
-vector<Point> removeFromContour(const vector<Point> &contour, const vector<int> &defectsIndex, int &minDistance) {
+vector<Point> removeDefectsFromContour(const vector<Point> &contour, const vector<int> &defectsIndex, int &minDistance) {
     minDistance = INT_MAX;
     int startIndex, endIndex;
 
@@ -85,6 +84,7 @@ void calculateSize(cv::Mat& image, cv::Size2i& tomatoSize, cv::Mat& ROI){
             }
         }
     }
+
     vector<vector<Point> > contours;
     findContours(thresholdImage, contours, RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
     vector<Point> tomatoBoundary;
@@ -124,7 +124,7 @@ void calculateSize(cv::Mat& image, cv::Size2i& tomatoSize, cv::Mat& ROI){
                     break;
                 }
                 // If I have more than 2 defects, remove the points between the two nearest defects
-                tomatoBoundary = removeFromContour(tomatoBoundary, defectsIndex, minDistance);
+                tomatoBoundary = removeDefectsFromContour(tomatoBoundary, defectsIndex, minDistance);
 
                 if (minDistance >= MIN_DISTANCE) {
                     break;
@@ -155,7 +155,6 @@ void calculateSize(cv::Mat& image, cv::Size2i& tomatoSize, cv::Mat& ROI){
         // Push tomatoBoundary to a vector to pass as argument to drawContours function
         cntArray.push_back(tomatoBoundary);
         drawContours(mask, cntArray, -1, (255), CV_FILLED);
-        //imshow("mask",mask);
 
         for (int y = 0; y < mask.rows; ++y) {
             uchar *roi_data = ROI.ptr<uchar>(y);
@@ -175,8 +174,6 @@ void calculateSize(cv::Mat& image, cv::Size2i& tomatoSize, cv::Mat& ROI){
                 mask_data++;
             }
         }
-        //imshow("ROI",ROI);
-        //imwrite("a.jpg",ROI);
     }
 }
 std::vector<int> find3PeaksHistogram(cv::Mat& ROI){
@@ -200,12 +197,68 @@ std::vector<int> find3PeaksHistogram(cv::Mat& ROI){
 
     vector<int> peak(3,0);
 
-    peak[0]=std::distance(redArray,std::max_element(redArray,redArray+255));
-    peak[1]=std::distance(greenArray,std::max_element(greenArray,greenArray+255));
-    peak[2]=std::distance(blueArray,std::max_element(blueArray,blueArray+255));
+    peak[0]=(int)std::distance(redArray,std::max_element(redArray,redArray+255));
+    peak[1]=(int)std::distance(greenArray,std::max_element(greenArray,greenArray+255));
+    peak[2]=(int)std::distance(blueArray,std::max_element(blueArray,blueArray+255));
 
     return peak;
 }
+
+int trainColorModel(string directory){
+    system("rm tomato_classifier");
+    ofstream trainingFeatureFile;
+    trainingFeatureFile.open("tomato_classifier",ios::app);
+    if (!trainingFeatureFile.is_open()){
+        cout << "Can't open training file: \"tomato_classifier\"" << endl;
+        exit(-1);
+    }
+    vector<string> classDir;
+    vector<int> classNumber;
+    if (directory[directory.length()-1] != '/')
+        directory+='/';
+    DIR *dir;
+    DIR *sub_dir;
+    struct dirent *ent;
+    struct dirent *sub_ent;
+    if ((dir = opendir(directory.c_str())) != NULL){
+        while ((ent=readdir(dir))!=NULL){
+            if (ent->d_name[0] != '.'){
+                string dirName = directory;
+                dirName += ent->d_name;
+                int no = stoi(ent->d_name);
+                classNumber.push_back(no);
+                dirName += '/';
+                classDir.push_back(dirName);
+                if ((sub_dir = opendir(dirName.c_str())) != NULL){
+                    while ((sub_ent=readdir(sub_dir))!=NULL) {
+                        if (sub_ent->d_name[0] != '.') {
+                            string fileName;
+                            fileName = dirName + sub_ent->d_name;
+                            cout << fileName << endl;
+                            Mat colorImage = imread(fileName);
+                            Mat ROI=colorImage.clone();
+                            Size2i tomatoSize;
+                            calculateSize(colorImage, tomatoSize, ROI);
+                            vector<int> feature(3,0);
+                            feature = find3PeaksHistogram(ROI);
+                            trainingFeatureFile << no << " 1:" << feature[0] << " 2:" << feature[1] << " 3:" << feature[2] << endl;
+                        }
+                    }
+                }else {
+                    perror("Could not open directory");
+                    return EXIT_FAILURE;
+                }
+            }
+        }
+    } else {
+        perror("Could not open directory");
+        return EXIT_FAILURE;
+    }
+    system("./svm-train tomato_classifier");
+    cout << "Training completed!" << endl;
+    return 0;
+}
+
 double predictColor(vector<int> feature){
     //feature[0]=red peak, feature[1]=green peak, feature[2]=blue peak
     double predict_label;
